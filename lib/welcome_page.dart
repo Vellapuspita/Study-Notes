@@ -30,7 +30,7 @@ class WelcomePage extends StatelessWidget {
 
             //gambar
             Image.asset(
-              'assets/images/notes_list.png',
+              'asset/images/notes_list.png',
               height: 200,
             ),
 
