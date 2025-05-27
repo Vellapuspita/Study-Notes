@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:study_notes_project/sign_in.dart';
-import 'package:study_notes_project/sign_up.dart';
-import 'package:study_notes_project/welcome_page.dart';
+import 'package:flutter_application_1/home_screen.dart';
+
+// import 'change_password_page.dart';
+// import 'edit_profile_page.dart';
+import 'sign_in.dart';
+import 'sign_up.dart';
+import 'welcome_page.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget { 
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,10 +22,11 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
-      routes: { //routing aplikasi 
+      routes: {
+        //routing aplikasi
         '/': (context) => const WelcomePage(),
-        SignUpPage.id: (context) => const SignUpPage(),
-        SignInPage.id: (context) => const SignInPage(),
+        '/signup': (context) => const SignUpPage(),
+        '/signin': (context) => const SignInPage(),
       },
     );
   }

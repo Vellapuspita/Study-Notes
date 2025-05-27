@@ -30,7 +30,7 @@ class WelcomePage extends StatelessWidget {
 
             //gambar
             Image.asset(
-              'asset/images/notes_list.png',
+              'assets/images/notes_list.png',
               height: 200,
             ),
 
@@ -69,7 +69,7 @@ class WelcomePage extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: const Color(0xFF001489),
+                    color:  Color(0xFF001489),
                     fontFamily: 'Poppins',
                   ),
                 ),
@@ -98,7 +98,7 @@ class WelcomePage extends StatelessWidget {
                         TextSpan(
                           text: 'Sign In',
                           style: TextStyle(
-                            color: const Color(0xFFFCCB00),
+                            color: Color(0xFFFCCB00),
                             decoration: TextDecoration.underline,
                           ),
                         ),

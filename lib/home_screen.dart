@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const HomeScreen());
 }
 
 // MODEL DATA NOTE
@@ -13,9 +13,11 @@ class Note {
     : subNotes = subNotes ?? [];
 }
 
+
+
 // APLIKASI UTAMA
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
