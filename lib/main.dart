@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/home_screen.dart';
-
-// import 'change_password_page.dart';
-// import 'edit_profile_page.dart';
 import 'sign_in.dart';
 import 'sign_up.dart';
 import 'welcome_page.dart';
