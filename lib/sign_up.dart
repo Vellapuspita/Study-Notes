@@ -39,7 +39,7 @@ class SignUpPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/signin'); // navigasi ke halaman sign in
+                  Navigator.pushReplacementNamed(context, '/signin'); // navigasi ke halaman sign in
                   //aksi saat tombol SIGN UP ditekan
                 },
                 style: ElevatedButton.styleFrom(

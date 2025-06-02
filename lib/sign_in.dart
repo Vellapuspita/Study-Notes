@@ -53,7 +53,7 @@ class SignInPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/homescreen'); // navigasi ke halaman home
+                  Navigator.pushReplacementNamed(context, '/homescreen'); // navigasi ke halaman home
                   //aksi saat tombol SIGN IN ditekan
 
                 },
