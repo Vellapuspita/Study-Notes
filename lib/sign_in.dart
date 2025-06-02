@@ -13,6 +13,7 @@ class SignInPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 20),
             const Center(
               child: Text(
                 'SIGN IN',
@@ -52,6 +53,8 @@ class SignInPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
+                  Navigator.pushNamed(context, '/homescreen'); // navigasi ke halaman home
+                  //aksi saat tombol SIGN IN ditekan
 
                 },
                 style: ElevatedButton.styleFrom(

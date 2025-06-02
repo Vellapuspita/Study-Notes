@@ -16,7 +16,8 @@ class Note {
 
 
 // APLIKASI UTAMA
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatelessWidget {  
+  static const String id = '/homescreen' ; //identifier route untuk navigasi
   const HomeScreen({super.key});
 
   @override

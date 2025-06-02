@@ -13,6 +13,7 @@ class SignUpPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 30),
             const Center(
               child: Text(
                 'SIGN UP',
@@ -38,6 +39,7 @@ class SignUpPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
+                  Navigator.pushNamed(context, '/signin'); // navigasi ke halaman sign in
                   //aksi saat tombol SIGN UP ditekan
                 },
                 style: ElevatedButton.styleFrom(
@@ -97,10 +99,7 @@ Widget _buildTextField({required String label, bool obscureText = false}) {
     style: const TextStyle(color: Colors.white),
     decoration: InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(
-        color: Colors.white,
-        fontFamily: 'Poppins',
-      ),
+      labelStyle: const TextStyle(color: Colors.white, fontFamily: 'Poppins'),
       filled: true,
       fillColor: const Color(0xFF0033A0),
       border: OutlineInputBorder(

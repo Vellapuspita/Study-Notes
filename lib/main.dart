@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/home_screen.dart';
 import 'sign_in.dart';
 import 'sign_up.dart';
 import 'welcome_page.dart';
@@ -12,10 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Study Notes',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: 'Fredoka',
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Fredoka'),
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
@@ -23,6 +21,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const WelcomePage(),
         '/signup': (context) => const SignUpPage(),
         '/signin': (context) => const SignInPage(),
+        '/homescreen': (context) => const HomeScreen(),
       },
     );
   }
