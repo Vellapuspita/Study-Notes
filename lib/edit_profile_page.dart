@@ -123,7 +123,7 @@ class _EditProfileScreenState extends State<EditProfilePage> {
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _saveProfile,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.yellow,
+                      backgroundColor: const Color(0xFFFCCB00),
                       foregroundColor: const Color(0xFF001489),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),

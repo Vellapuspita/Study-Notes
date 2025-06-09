@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'settings_screen.dart'; // Add this import
 
 void main() {
   runApp(const HomeScreen());
@@ -113,7 +114,12 @@ class _NotesPageState extends State<NotesPage> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                    );
+                  },
                   icon: const Icon(Icons.settings, size: 30),
                 ),
               ],

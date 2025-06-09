@@ -94,7 +94,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 child: ElevatedButton(
                   onPressed: _handleSave,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.yellow,
+                    backgroundColor: const Color(0xFFFCCB00),
                     foregroundColor: const Color(0xFF001489),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
