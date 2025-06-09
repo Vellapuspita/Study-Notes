@@ -51,32 +51,38 @@ class _NotesPageState extends State<NotesPage> {
 
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Add New Note'),
-            content: TextField(
-              controller: _controller,
-              decoration: const InputDecoration(hintText: 'Enter note title'),
-              autofocus: true,
+      builder: (context) => AlertDialog(
+        title: const Text('Add New Note'),
+        content: SizedBox.fromSize(
+          size: const Size(300, 50), // Fixed height for the input field
+          child: TextField(
+            controller: _controller,
+            decoration: const InputDecoration(
+              hintText: 'Enter note title',
+              border: OutlineInputBorder(), // Add a border for better visibility
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_controller.text.isNotEmpty) {
-                    setState(() {
-                      _notes.add(Note(title: _controller.text.toUpperCase()));
-                    });
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Add'),
-              ),
-            ],
+            autofocus: true,
+            maxLines: 1, // Single-line input
           ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (_controller.text.isNotEmpty) {
+                setState(() {
+                  _notes.add(Note(title: _controller.text.toUpperCase()));
+                });
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Add'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -229,33 +235,41 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
 
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Add Detail Note'),
-            content: TextField(
-              controller: _controller,
-              decoration: const InputDecoration(hintText: 'Enter detail'),
-              autofocus: true,
+      builder: (context) => AlertDialog(
+        title: const Text('Add Detail Note'),
+        content: SizedBox.fromSize(
+          size: const Size(250, 350),  // Set a fixed height for the input field
+          child: TextField(
+            controller: _controller,
+            decoration: const InputDecoration(
+              hintText: 'Enter detail',
+              border: OutlineInputBorder(), // Add a border for better visibility
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_controller.text.isNotEmpty) {
-                    setState(() {
-                      widget.note.subNotes.add(_controller.text);
-                    });
-                    widget.onUpdate();
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Add'),
-              ),
-            ],
+            autofocus: true,
+            maxLines: null, // Allow the input field to expand vertically
+            expands: true, // Enable vertical expansion
+            textAlignVertical: TextAlignVertical.top, // Align text to the top
           ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (_controller.text.isNotEmpty) {
+                setState(() {
+                  widget.note.subNotes.add(_controller.text);
+                });
+                widget.onUpdate();
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Add'),
+          ),
+        ],
+      ),
     );
   }
 
