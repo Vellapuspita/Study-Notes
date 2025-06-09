@@ -87,63 +87,106 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   void _deleteNote(int index) {
-    setState(() {
-      _notes.removeAt(index);
-    });
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Note'),
+        content: const Text('Are you sure you want to delete this note?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context), // Close the dialog
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _notes.removeAt(index);
+              });
+              Navigator.pop(context); // Close the dialog after deleting
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-            decoration: const BoxDecoration(
-              color: Colors.amber,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(50),
-                bottomRight: Radius.circular(50),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: const AssetImage('assets/images/background_pattern.png'),
+            fit: BoxFit.cover, // Cover the entire screen
+          ),
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              decoration: const BoxDecoration(
+                color: Colors.amber,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(50),
+                  bottomRight: Radius.circular(50),
+                ),
+              ),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 25,
+                    child: Icon(Icons.person, size: 30),
+                  ),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Text(
+                      'Hi, Vella',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                      );
+                    },
+                    icon: const Icon(Icons.settings, size: 30),
+                  ),
+                ],
               ),
             ),
-            child: Row(
-              children: [
-                const CircleAvatar(
-                  radius: 25,
-                  child: Icon(Icons.person, size: 30),
-                ),
-                const SizedBox(width: 10),
-                const Expanded(
-                  child: Text(
-                    'Hi, Vella',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SettingsScreen()),
-                    );
-                  },
-                  icon: const Icon(Icons.settings, size: 30),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: _notes.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (_) => NoteDetailPage(
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: _notes.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      title: Text(
+                        _notes[index].title,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      tileColor: _getNoteColor(index), // Set the background color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => NoteDetailPage(
                               note: _notes[index],
                               onUpdate: () => setState(() {}),
                               onDelete: () {
@@ -151,30 +194,22 @@ class _NotesPageState extends State<NotesPage> {
                                 Navigator.pop(context);
                               },
                             ),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: _getNoteColor(index),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      _notes[index].title,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                          ),
+                        );
+                      },
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.black),
+                        onPressed: () {
+                          _deleteNote(index); // Call the delete method
+                        },
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.amber,
@@ -274,10 +309,29 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
   }
 
   void _deleteSubNote(int index) {
-    setState(() {
-      widget.note.subNotes.removeAt(index);
-    });
-    widget.onUpdate();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Detail Note'),
+        content: const Text('Are you sure you want to delete this detail note?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context), // Close the dialog
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                widget.note.subNotes.removeAt(index);
+              });
+              widget.onUpdate();
+              Navigator.pop(context); // Close the dialog after deleting
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -295,18 +349,26 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
           ),
         ],
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: widget.note.subNotes.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(widget.note.subNotes[index]),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () => _deleteSubNote(index),
-            ),
-          );
-        },
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/background_pattern2.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: widget.note.subNotes.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(widget.note.subNotes[index]),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () => _deleteSubNote(index),
+              ),
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.amber,
@@ -316,3 +378,5 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
     );
   }
 }
+
+
