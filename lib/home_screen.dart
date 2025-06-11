@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/todolist_page.dart';
 import 'settings_screen.dart'; // Add this import
 
 void main() {
@@ -14,11 +15,9 @@ class Note {
     : subNotes = subNotes ?? [];
 }
 
-
-
 // APLIKASI UTAMA
-class HomeScreen extends StatelessWidget {  
-  static const String id = '/homescreen' ; //identifier route untuk navigasi
+class HomeScreen extends StatelessWidget {
+  static const String id = '/homescreen'; //identifier route untuk navigasi
   const HomeScreen({super.key});
 
   @override
@@ -51,63 +50,66 @@ class _NotesPageState extends State<NotesPage> {
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add New Note'),
-        content: SizedBox.fromSize(
-          size: const Size(300, 50), // Fixed height for the input field
-          child: TextField(
-            controller: _controller,
-            decoration: const InputDecoration(
-              hintText: 'Enter note title',
-              border: OutlineInputBorder(), // Add a border for better visibility
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Add New Note'),
+            content: SizedBox.fromSize(
+              size: const Size(300, 50), // Fixed height for the input field
+              child: TextField(
+                controller: _controller,
+                decoration: const InputDecoration(
+                  hintText: 'Enter note title',
+                  border:
+                      OutlineInputBorder(), // Add a border for better visibility
+                ),
+                autofocus: true,
+                maxLines: 1, // Single-line input
+              ),
             ),
-            autofocus: true,
-            maxLines: 1, // Single-line input
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_controller.text.isNotEmpty) {
+                    setState(() {
+                      _notes.add(Note(title: _controller.text.toUpperCase()));
+                    });
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text('Add'),
+              ),
+            ],
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (_controller.text.isNotEmpty) {
-                setState(() {
-                  _notes.add(Note(title: _controller.text.toUpperCase()));
-                });
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Add'),
-          ),
-        ],
-      ),
     );
   }
 
   void _deleteNote(int index) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Note'),
-        content: const Text('Are you sure you want to delete this note?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context), // Close the dialog
-            child: const Text('Cancel'),
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Delete Note'),
+            content: const Text('Are you sure you want to delete this note?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context), // Close the dialog
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _notes.removeAt(index);
+                  });
+                  Navigator.pop(context); // Close the dialog after deleting
+                },
+                child: const Text('Delete'),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _notes.removeAt(index);
-              });
-              Navigator.pop(context); // Close the dialog after deleting
-            },
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
     );
   }
 
@@ -142,14 +144,19 @@ class _NotesPageState extends State<NotesPage> {
                   const Expanded(
                     child: Text(
                       'Hi, Vella',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   IconButton(
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const SettingsScreen(),
+                        ),
                       );
                     },
                     icon: const Icon(Icons.settings, size: 30),
@@ -169,7 +176,10 @@ class _NotesPageState extends State<NotesPage> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       title: Text(
                         _notes[index].title,
                         style: const TextStyle(
@@ -178,7 +188,9 @@ class _NotesPageState extends State<NotesPage> {
                           fontSize: 16,
                         ),
                       ),
-                      tileColor: _getNoteColor(index), // Set the background color
+                      tileColor: _getNoteColor(
+                        index,
+                      ), // Set the background color
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -186,14 +198,15 @@ class _NotesPageState extends State<NotesPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => NoteDetailPage(
-                              note: _notes[index],
-                              onUpdate: () => setState(() {}),
-                              onDelete: () {
-                                _deleteNote(index);
-                                Navigator.pop(context);
-                              },
-                            ),
+                            builder:
+                                (_) => NoteDetailPage(
+                                  note: _notes[index],
+                                  onUpdate: () => setState(() {}),
+                                  onDelete: () {
+                                    _deleteNote(index);
+                                    Navigator.pop(context);
+                                  },
+                                ),
                           ),
                         );
                       },
@@ -215,17 +228,27 @@ class _NotesPageState extends State<NotesPage> {
         backgroundColor: Colors.amber,
         onPressed: _addNote,
         child: const Icon(Icons.add, color: Colors.black),
+        shape: const CircleBorder(),
+        elevation: 0,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         color: Colors.amber,
         shape: const CircularNotchedRectangle(),
-        notchMargin: 8,
+        notchMargin: 2,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(icon: const Icon(Icons.home), onPressed: () {}),
-            IconButton(icon: const Icon(Icons.notes), onPressed: () {}),
+            IconButton(
+              icon: const Icon(Icons.notes),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TodoPage()),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -270,67 +293,76 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Detail Note'),
-        content: SizedBox.fromSize(
-          size: const Size(250, 350),  // Set a fixed height for the input field
-          child: TextField(
-            controller: _controller,
-            decoration: const InputDecoration(
-              hintText: 'Enter detail',
-              border: OutlineInputBorder(), // Add a border for better visibility
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Add Detail Note'),
+            content: SizedBox.fromSize(
+              size: const Size(
+                250,
+                350,
+              ), // Set a fixed height for the input field
+              child: TextField(
+                controller: _controller,
+                decoration: const InputDecoration(
+                  hintText: 'Enter detail',
+                  border:
+                      OutlineInputBorder(), // Add a border for better visibility
+                ),
+                autofocus: true,
+                maxLines: null, // Allow the input field to expand vertically
+                expands: true, // Enable vertical expansion
+                textAlignVertical:
+                    TextAlignVertical.top, // Align text to the top
+              ),
             ),
-            autofocus: true,
-            maxLines: null, // Allow the input field to expand vertically
-            expands: true, // Enable vertical expansion
-            textAlignVertical: TextAlignVertical.top, // Align text to the top
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_controller.text.isNotEmpty) {
+                    setState(() {
+                      widget.note.subNotes.add(_controller.text);
+                    });
+                    widget.onUpdate();
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text('Add'),
+              ),
+            ],
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (_controller.text.isNotEmpty) {
-                setState(() {
-                  widget.note.subNotes.add(_controller.text);
-                });
-                widget.onUpdate();
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Add'),
-          ),
-        ],
-      ),
     );
   }
 
   void _deleteSubNote(int index) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Detail Note'),
-        content: const Text('Are you sure you want to delete this detail note?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context), // Close the dialog
-            child: const Text('Cancel'),
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Delete Detail Note'),
+            content: const Text(
+              'Are you sure you want to delete this detail note?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context), // Close the dialog
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    widget.note.subNotes.removeAt(index);
+                  });
+                  widget.onUpdate();
+                  Navigator.pop(context); // Close the dialog after deleting
+                },
+                child: const Text('Delete'),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                widget.note.subNotes.removeAt(index);
-              });
-              widget.onUpdate();
-              Navigator.pop(context); // Close the dialog after deleting
-            },
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
     );
   }
 
@@ -378,5 +410,3 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
     );
   }
 }
-
-
