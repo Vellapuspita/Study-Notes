@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SignInPage extends StatelessWidget {
-  static const String id = '/signin' ; //identifier route untuk navigasi
+  static const String id = '/signin'; //identifier route untuk navigasi
   const SignInPage({super.key});
 
   @override
@@ -28,13 +28,20 @@ class SignInPage extends StatelessWidget {
             const SizedBox(height: 40),
             _buildTextField(label: 'Email'), //membuat field email
             const SizedBox(height: 40),
-            _buildTextField(label: 'Password', obscureText: true), //membuat field password, dengan teks tertutup 
+            _buildTextField(
+              label: 'Password',
+              obscureText: true,
+            ), //membuat field password, dengan teks tertutup
             const SizedBox(height: 40),
             Align(
               alignment: Alignment.centerRight,
               child: GestureDetector(
                 onTap: () {
                   //forgot password
+                  Navigator.pushNamed(
+                    context,
+                    '/forgotpassword',
+                  ); //navigasi ke halaman forgot password
                 },
                 child: const Text(
                   'Forgot password?',
@@ -53,9 +60,11 @@ class SignInPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/homescreen'); // navigasi ke halaman home
+                  Navigator.pushReplacementNamed(
+                    context,
+                    '/homescreen',
+                  ); // navigasi ke halaman home
                   //aksi saat tombol SIGN IN ditekan
-
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFCCB00),
@@ -80,7 +89,10 @@ class SignInPage extends StatelessWidget {
             Center(
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/signup'); //membawa ke halaman signup
+                  Navigator.pushNamed(
+                    context,
+                    '/signup',
+                  ); //membawa ke halaman signup
                 },
                 child: RichText(
                   text: const TextSpan(
@@ -115,10 +127,7 @@ class SignInPage extends StatelessWidget {
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(
-          color: Colors.white,
-          fontFamily: 'Poppins',
-        ),
+        labelStyle: const TextStyle(color: Colors.white, fontFamily: 'Poppins'),
         filled: true,
         fillColor: const Color(0xFF0033A0),
         border: OutlineInputBorder(

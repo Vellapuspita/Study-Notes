@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/forgot_password.dart';
 import 'package:flutter_application_1/home_screen.dart';
+import 'package:flutter_application_1/reset_password.dart';
 import 'sign_in.dart';
 import 'sign_up.dart';
 import 'welcome_page.dart';
@@ -22,6 +24,8 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignUpPage(),
         '/signin': (context) => const SignInPage(),
         '/homescreen': (context) => const HomeScreen(),
+        '/forgotpassword': (context) => ForgotPasswordPage(),
+        '/resetpassword': (context) => const ResetPasswordPage(),
       },
     );
   }
