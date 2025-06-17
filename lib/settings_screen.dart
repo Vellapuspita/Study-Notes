@@ -9,17 +9,21 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 80, // Menambah tinggi AppBar
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'SETTINGS',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2.0,
+        title: const Padding(
+          padding: EdgeInsets.only(top: 50.0), // Tambahkan jarak dari atas
+          child: Text(
+            'SETTINGS',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2.0,
+            ),
           ),
         ),
         centerTitle: true,
@@ -42,17 +46,23 @@ class SettingsScreen extends StatelessWidget {
               ),
               HoverableListTile(
                 title: 'Edit Profile',
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const EditProfilePage()),
-                ),
+                onTap:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EditProfilePage(),
+                      ),
+                    ),
               ),
               HoverableListTile(
                 title: 'Change Password',
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ChangePasswordPage()),
-                ), // Add the missing closing parenthesis
+                onTap:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ChangePasswordPage(),
+                      ),
+                    ),
               ),
               const SizedBox(height: 20),
               const Text(
@@ -63,31 +73,25 @@ class SettingsScreen extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              HoverableListTile(
-                title: 'Language',
-                onTap: () {},
-              ),
-              HoverableListTile(
-                title: 'Notifications',
-                onTap: () {},
-              ),
-              HoverableListTile(
-                title: 'Delete Account',
-                onTap: () {},
-              ),
+              HoverableListTile(title: 'Language', onTap: () {}),
+              HoverableListTile(title: 'Notifications', onTap: () {}),
+              HoverableListTile(title: 'Delete Account', onTap: () {}),
               const Spacer(),
               Center(
                 child: ElevatedButton(
                   onPressed: () {},
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFCCB00)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFCCB00),
+                  ),
                   child: const Text(
-                    'LOGOUT', 
+                    'LOGOUT',
                     style: TextStyle(
-                      color:  Color(0xFF001995),
+                      color: Color(0xFF001995),
                       fontSize: 20,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 2.0,
-                      )),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -103,7 +107,7 @@ class HoverableListTile extends StatefulWidget {
   final VoidCallback onTap;
 
   const HoverableListTile({Key? key, required this.title, required this.onTap})
-      : super(key: key);
+    : super(key: key);
 
   @override
   _HoverableListTileState createState() => _HoverableListTileState();
@@ -121,12 +125,12 @@ class _HoverableListTileState extends State<HoverableListTile> {
         title: Text(
           widget.title,
           style: TextStyle(
-            color: _isHovered ? const Color(0xFFFCCB00) : Colors.white, // Change text color on hover
+            color: _isHovered ? const Color(0xFFFCCB00) : Colors.white,
           ),
         ),
         trailing: Icon(
           Icons.arrow_forward,
-          color: _isHovered ? const Color(0xFFFCCB00) : Colors.white, // Change icon color on hover
+          color: _isHovered ? const Color(0xFFFCCB00) : Colors.white,
         ),
         onTap: widget.onTap,
       ),
