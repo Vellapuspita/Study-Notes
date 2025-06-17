@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/edit_profile_page.dart';
+import 'profile_page.dart';
 import 'package:flutter_application_1/todolist_page.dart';
-import 'settings_screen.dart'; // Add this import
+import 'settings_screen.dart';
 
 void main() {
   runApp(const HomeScreen());
 }
 
-// MODEL DATA NOTE
 class Note {
   String title;
   List<String> subNotes;
 
   Note({required this.title, List<String>? subNotes})
-    : subNotes = subNotes ?? [];
+      : subNotes = subNotes ?? [];
 }
 
-// APLIKASI UTAMA
 class HomeScreen extends StatelessWidget {
-  static const String id = '/homescreen'; //identifier route untuk navigasi
+  static const String id = '/homescreen';
+
   const HomeScreen({super.key});
 
   @override
@@ -34,7 +35,6 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-// HALAMAN UTAMA
 class NotesPage extends StatefulWidget {
   const NotesPage({super.key});
 
@@ -50,72 +50,128 @@ class _NotesPageState extends State<NotesPage> {
 
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Add New Note'),
-            content: SizedBox.fromSize(
-              size: const Size(300, 50), // Fixed height for the input field
-              child: TextField(
-                controller: _controller,
-                decoration: const InputDecoration(
-                  hintText: 'Enter note title',
-                  border:
-                      OutlineInputBorder(), // Add a border for better visibility
-                ),
-                autofocus: true,
-                maxLines: 1, // Single-line input
-              ),
+      builder: (context) => AlertDialog(
+        title: const Text('Add New Note'),
+        content: SizedBox(
+          height: 50,
+          child: TextField(
+            controller: _controller,
+            decoration: const InputDecoration(
+              hintText: 'Enter note title',
+              border: OutlineInputBorder(),
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_controller.text.isNotEmpty) {
-                    setState(() {
-                      _notes.add(Note(title: _controller.text.toUpperCase()));
-                    });
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Add'),
-              ),
-            ],
+            autofocus: true,
+            maxLines: 1,
           ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (_controller.text.isNotEmpty) {
+                setState(() {
+                  _notes.add(Note(title: _controller.text.toUpperCase()));
+                });
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Add'),
+          ),
+        ],
+      ),
     );
   }
 
   void _deleteNote(int index) {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Delete Note'),
-            content: const Text('Are you sure you want to delete this note?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context), // Close the dialog
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _notes.removeAt(index);
-                  });
-                  Navigator.pop(context); // Close the dialog after deleting
-                },
-                child: const Text('Delete'),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Note'),
+        content: const Text('Are you sure you want to delete this note?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
           ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _notes.removeAt(index);
+              });
+              Navigator.pop(context);
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+<<<<<<< HEAD
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/background_pattern.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              decoration: const BoxDecoration(
+                color: Colors.amber,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(50),
+                  bottomRight: Radius.circular(50),
+                ),
+              ),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProfileScreen(),
+                        ),
+                      );
+                    },
+                    child: const CircleAvatar(
+                      radius: 25,
+                      child: Icon(Icons.person, size: 30),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Text(
+                      'Hi, Vella',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SettingsScreen(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.settings, size: 30),
+                  ),
+                ],
+              ),
+=======
       body: Stack(
         children: [
           // Background image
@@ -130,6 +186,7 @@ class _NotesPageState extends State<NotesPage> {
                   BlendMode.dstATop,
                 ),
               ),
+>>>>>>> 3ff52d1a63112b659edbdd42f1657dcaaa1c31bf
             ),
           ),
           // Main content
@@ -160,6 +217,31 @@ class _NotesPageState extends State<NotesPage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+<<<<<<< HEAD
+                      tileColor: _getNoteColor(index),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => NoteDetailPage(
+                              note: _notes[index],
+                              onUpdate: () => setState(() {}),
+                              onDelete: () {
+                                _deleteNote(index);
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.black),
+                        onPressed: () => _deleteNote(index),
+                      ),
+=======
                     ),
                     IconButton(
                       onPressed: () {
@@ -175,6 +257,7 @@ class _NotesPageState extends State<NotesPage> {
                         size: 30,
                         color: Colors.white,
                         ),
+>>>>>>> 3ff52d1a63112b659edbdd42f1657dcaaa1c31bf
                     ),
                   ],
                 ),
@@ -298,7 +381,6 @@ class _NotesPageState extends State<NotesPage> {
   }
 }
 
-// HALAMAN DETAIL NOTE
 class NoteDetailPage extends StatefulWidget {
   final Note note;
   final VoidCallback onUpdate;
@@ -431,6 +513,10 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
         ),
         actions: [
           IconButton(
+<<<<<<< HEAD
+            icon: const Icon(Icons.delete),
+            onPressed: widget.onDelete,
+=======
             icon: const Icon(
               Icons.delete,
               color: Colors.white,
@@ -438,6 +524,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
             onPressed: () {
               widget.onDelete();
             },
+>>>>>>> 3ff52d1a63112b659edbdd42f1657dcaaa1c31bf
           ),
         ],
       ),
