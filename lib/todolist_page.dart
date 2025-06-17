@@ -26,112 +26,169 @@ class _TodoPageState extends State<TodoPage> {
   };
 
   void _showAddCategoryDialog() {
-    final TextEditingController categoryController = TextEditingController();
-    final List<TextEditingController> taskControllers = [TextEditingController()];
+    final categoryController = TextEditingController();
+    final taskControllers = [TextEditingController()];
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF001A72),
-        title: const Text("Tambah Kategori & Task", style: TextStyle(color: Colors.white, fontFamily: 'Poppins')),
-        content: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextField(
-                controller: categoryController,
-                style: const TextStyle(color: Colors.white, fontFamily: 'Poppins'),
-                decoration: const InputDecoration(
-                  labelText: 'Nama Kategori',
-                  labelStyle: TextStyle(color: Colors.white),
+      builder:
+          (context) => AlertDialog(
+            backgroundColor: const Color(0xFF001A72),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: const Text(
+              "Tambah Kategori & Task",
+              style: TextStyle(color: Colors.white, fontFamily: 'Poppins'),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  TextField(
+                    controller: categoryController,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Poppins',
+                    ),
+                    decoration: const InputDecoration(
+                      labelText: 'Nama Kategori',
+                      labelStyle: TextStyle(color: Colors.white),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.yellow),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ...taskControllers.map(
+                    (controller) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: TextField(
+                        controller: controller,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Poppins',
+                        ),
+                        decoration: const InputDecoration(
+                          labelText: 'Nama Task',
+                          labelStyle: TextStyle(color: Colors.white),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.yellow),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          taskControllers.add(TextEditingController());
+                        });
+                      },
+                      icon: const Icon(Icons.add, color: Colors.yellow),
+                      label: const Text(
+                        "Tambah Task",
+                        style: TextStyle(color: Colors.yellow),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  "Batal",
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
-              const SizedBox(height: 10),
-              ...taskControllers.map((controller) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: TextField(
-                  controller: controller,
-                  style: const TextStyle(color: Colors.white, fontFamily: 'Poppins'),
-                  decoration: const InputDecoration(
-                    labelText: 'Nama Task',
-                    labelStyle: TextStyle(color: Colors.white),
-                  ),
-                ),
-              )),
-              TextButton.icon(
+              ElevatedButton(
                 onPressed: () {
-                  setState(() {
-                    taskControllers.add(TextEditingController());
-                  });
+                  final category = categoryController.text.trim();
+                  if (category.isNotEmpty) {
+                    final tasks =
+                        taskControllers
+                            .where(
+                              (controller) => controller.text.trim().isNotEmpty,
+                            )
+                            .map(
+                              (controller) => TaskItem(controller.text.trim()),
+                            )
+                            .toList();
+                    if (tasks.isNotEmpty) {
+                      setState(() {
+                        categories[category] = tasks;
+                      });
+                      Navigator.pop(context);
+                    }
+                  }
                 },
-                icon: const Icon(Icons.add, color: Colors.yellow),
-                label: const Text("Tambah Task", style: TextStyle(color: Colors.yellow)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFCCB00),
+                ),
+                child: const Text(
+                  "Simpan",
+                  style: TextStyle(color: Color(0xFF001A72)),
+                ),
               ),
             ],
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // tutup dialog
-            },
-            child: const Text("Batal", style: TextStyle(color: Colors.white)),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final String categoryName = categoryController.text.trim();
-              if (categoryName.isNotEmpty) {
-                final List<TaskItem> tasks = taskControllers
-                    .where((controller) => controller.text.trim().isNotEmpty)
-                    .map((controller) => TaskItem(controller.text.trim()))
-                    .toList();
-                if (tasks.isNotEmpty) {
-                  setState(() {
-                    categories[categoryName] = tasks;
-                  });
-                  Navigator.pop(context); // jangan kembali ke home
-                }
-              }
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFCCB00)),
-            child: const Text("Simpan", style: TextStyle(color: Color(0xFF001A72))),
-          )
-        ],
-      ),
     );
   }
 
   void _editCategory(String oldName) {
-    final TextEditingController controller = TextEditingController(text: oldName);
+    final controller = TextEditingController(text: oldName);
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF001A72),
-        title: const Text("Edit Nama Kategori", style: TextStyle(color: Colors.white, fontFamily: 'Poppins')),
-        content: TextField(
-          controller: controller,
-          style: const TextStyle(color: Colors.white),
-          decoration: const InputDecoration(labelText: 'Nama Baru', labelStyle: TextStyle(color: Colors.white)),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Batal", style: TextStyle(color: Colors.white)),
+      builder:
+          (context) => AlertDialog(
+            backgroundColor: const Color(0xFF001A72),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: const Text(
+              "Edit Kategori",
+              style: TextStyle(color: Colors.white),
+            ),
+            content: TextField(
+              controller: controller,
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                labelText: 'Nama Baru',
+                labelStyle: TextStyle(color: Colors.white),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  "Batal",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  final newName = controller.text.trim();
+                  if (newName.isNotEmpty && newName != oldName) {
+                    setState(() {
+                      categories[newName] = categories.remove(oldName)!;
+                    });
+                  }
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFCCB00),
+                ),
+                child: const Text(
+                  "Simpan",
+                  style: TextStyle(color: Color(0xFF001A72)),
+                ),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () {
-              final newName = controller.text.trim();
-              if (newName.isNotEmpty && newName != oldName) {
-                setState(() {
-                  categories[newName] = categories.remove(oldName)!;
-                });
-              }
-              Navigator.pop(context);
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFCCB00)),
-            child: const Text("Simpan", style: TextStyle(color: Color(0xFF001A72))),
-          )
-        ],
-      ),
     );
   }
 
@@ -141,89 +198,173 @@ class _TodoPageState extends State<TodoPage> {
     });
   }
 
+  void _showAddTaskDialog(String category) {
+    final taskController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            backgroundColor: const Color(0xFF001A72),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Text(
+              "Tambah Task ke $category",
+              style: const TextStyle(
+                color: Colors.white,
+                fontFamily: 'Poppins',
+              ),
+            ),
+            content: TextField(
+              controller: taskController,
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                labelText: 'Nama Task',
+                labelStyle: TextStyle(color: Colors.white),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.yellow),
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  "Batal",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  final newTask = taskController.text.trim();
+                  if (newTask.isNotEmpty) {
+                    setState(() {
+                      categories[category]?.add(TaskItem(newTask));
+                    });
+                    Navigator.pop(context);
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFCCB00),
+                ),
+                child: const Text(
+                  "Tambah",
+                  style: TextStyle(color: Color(0xFF001A72)),
+                ),
+              ),
+            ],
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF001A72),
       appBar: AppBar(
-        title: const Text('Tasks', style: TextStyle(fontFamily: 'Poppins')),
+        title: const Text(
+          'My To-Do List',
+          style: TextStyle(fontFamily: 'Poppins'),
+        ),
         backgroundColor: const Color(0xFF001A72),
         foregroundColor: Colors.white,
         elevation: 0,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
-        children: categories.entries.map((entry) {
-          final completedCount = entry.value.where((item) => item.done).length;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+        children:
+            categories.entries.map((entry) {
+              final completedCount =
+                  entry.value.where((item) => item.done).length;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      '${entry.key} ($completedCount of ${entry.value.length} Tasks)',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        fontFamily: 'Poppins',
-                        color: Colors.lightGreenAccent,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${entry.key} ($completedCount/${entry.value.length})',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            fontFamily: 'Poppins',
+                            color: Colors.lightGreenAccent,
+                          ),
+                        ),
                       ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.add_task,
+                          color: Colors.yellowAccent,
+                        ),
+                        tooltip: "Tambah Task",
+                        onPressed: () => _showAddTaskDialog(entry.key),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.white),
+                        onPressed: () => _editCategory(entry.key),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.redAccent),
+                        onPressed: () => _deleteCategory(entry.key),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0033A0),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: ListView.builder(
+                      itemCount: entry.value.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, i) {
+                        final task = entry.value[i];
+                        return CheckboxListTile(
+                          value: task.done,
+                          onChanged: (value) {
+                            setState(() {
+                              task.done = value!;
+                            });
+                          },
+                          title: Text(
+                            task.title,
+                            style: TextStyle(
+                              decoration:
+                                  task.done ? TextDecoration.lineThrough : null,
+                              color: task.done ? Colors.grey : Colors.white,
+                              fontSize: 16,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                          controlAffinity: ListTileControlAffinity.leading,
+                          activeColor: Colors.yellow,
+                          checkColor: Colors.black,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 4,
+                          ),
+                        );
+                      },
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.white),
-                    onPressed: () => _editCategory(entry.key),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.redAccent),
-                    onPressed: () => _deleteCategory(entry.key),
-                  ),
+                  const SizedBox(height: 24),
                 ],
-              ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF0033A0),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  children: entry.value
-                      .map((task) => CheckboxListTile(
-                            value: task.done,
-                            onChanged: (value) {
-                              setState(() {
-                                task.done = value!;
-                              });
-                            },
-                            title: Text(
-                              task.title,
-                              style: TextStyle(
-                                decoration: task.done ? TextDecoration.lineThrough : TextDecoration.none,
-                                color: task.done ? Colors.grey : Colors.white,
-                                fontFamily: 'Poppins',
-                              ),
-                            ),
-                            activeColor: Colors.yellow,
-                            checkColor: Colors.black,
-                            controlAffinity: ListTileControlAffinity.leading,
-                            contentPadding: EdgeInsets.zero,
-                          ))
-                      .toList(),
-                ),
-              ),
-              const SizedBox(height: 24),
-            ],
-          );
-        }).toList(),
+              );
+            }).toList(),
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: const Color(0xFFFCCB00),
         foregroundColor: const Color(0xFF001A72),
         onPressed: _showAddCategoryDialog,
         icon: const Icon(Icons.add),
-        label: const Text("Tambah Task", style: TextStyle(fontFamily: 'Poppins')),
+        label: const Text(
+          "Tambah Task",
+          style: TextStyle(fontFamily: 'Poppins'),
+        ),
       ),
     );
   }
