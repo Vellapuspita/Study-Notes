@@ -109,7 +109,6 @@ class _NotesPageState extends State<NotesPage> {
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,9 +142,19 @@ class _NotesPageState extends State<NotesPage> {
                 ),
                 child: Row(
                   children: [
-                    const CircleAvatar(
-                      radius: 25,
-                      child: Icon(Icons.person, size: 30),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ProfileScreen(),
+                          ),
+                        );
+                      },
+                      child: const CircleAvatar(
+                        radius: 25,
+                        child: Icon(Icons.person, size: 30),
+                      ),
                     ),
                     const SizedBox(width: 10),
                     const Expanded(
