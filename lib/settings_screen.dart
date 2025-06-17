@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'edit_profile_page.dart'; // Add this import
-import 'change_password_page.dart'; // Import ChangePasswordPage
+import 'change_password_page.dart';
+import 'welcome_page.dart'; // Import ChangePasswordPage
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -79,7 +80,14 @@ class SettingsScreen extends StatelessWidget {
               const Spacer(),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const WelcomePage(), // Navigate to WelcomePage
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFCCB00),
                   ),
