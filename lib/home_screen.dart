@@ -113,6 +113,7 @@ class _NotesPageState extends State<NotesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+<<<<<<< HEAD
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -170,31 +171,53 @@ class _NotesPageState extends State<NotesPage> {
                   ),
                 ],
               ),
+=======
+      body: Stack(
+        children: [
+          // Background image
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: const AssetImage('assets/images/background_pattern.png'),
+                fit: BoxFit.cover, // Ensures the image covers the entire screen
+                colorFilter: ColorFilter.mode(
+                  // ignore: deprecated_member_use
+                  Colors.brown.withOpacity(0.1), // Makes the image slightly transparent
+                  BlendMode.dstATop,
+                ),
+              ),
+>>>>>>> 3ff52d1a63112b659edbdd42f1657dcaaa1c31bf
             ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: _notes.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+          ),
+          // Main content
+          Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                decoration: const BoxDecoration(
+                  color: Color(0xFF001489),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(50),
+                    bottomRight: Radius.circular(50),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const CircleAvatar(
+                      radius: 25,
+                      child: Icon(Icons.person, size: 30),
                     ),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      title: Text(
-                        _notes[index].title,
-                        style: const TextStyle(
-                          color: Colors.black,
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: Text(
+                        'Hi, Vella',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
                         ),
                       ),
+<<<<<<< HEAD
                       tileColor: _getNoteColor(index),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -218,42 +241,128 @@ class _NotesPageState extends State<NotesPage> {
                         icon: const Icon(Icons.delete, color: Colors.black),
                         onPressed: () => _deleteNote(index),
                       ),
+=======
                     ),
-                  );
-                },
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SettingsScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.settings, 
+                        size: 30,
+                        color: Colors.white,
+                        ),
+>>>>>>> 3ff52d1a63112b659edbdd42f1657dcaaa1c31bf
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: _notes.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        title: Text(
+                          _notes[index].title,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        tileColor: _getNoteColor(index), // Set the background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => NoteDetailPage(
+                                note: _notes[index],
+                                onUpdate: () => setState(() {}),
+                                onDelete: () {
+                                  _deleteNote(index);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.white),
+                          onPressed: () {
+                            _deleteNote(index); // Call the delete method
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              Container(
+                color: 
+                Color(0xFF001489),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                IconButton(icon: const Icon(
+                                  color: Colors.white,
+                                  Icons.home,
+                                  ), onPressed: () {}),
+                                IconButton(
+                    icon: const Icon(
+                      Icons.notes,
+                      color: Colors.white,
+                      ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const TodoPage()),
+                      );
+                    },
+                                ),
+                              ],
+                            ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.amber,
-        onPressed: _addNote,
-        child: const Icon(Icons.add, color: Colors.black),
-        shape: const CircleBorder(),
-        elevation: 0,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: FloatingActionButton(
+          backgroundColor: Color(0xFF001489),
+          onPressed: _addNote,
+          child: const Icon(Icons.add, color: Colors.white),
+          shape: const CircleBorder(),
+          elevation: 10,
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.amber,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 2,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(icon: const Icon(Icons.home), onPressed: () {}),
-            IconButton(
-              icon: const Icon(Icons.notes),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const TodoPage()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      
     );
   }
 
@@ -362,12 +471,22 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.amber,
+        backgroundColor: Color(0xFF001489),
         title: Text(widget.note.title),
         actions: [
           IconButton(
+<<<<<<< HEAD
             icon: const Icon(Icons.delete),
             onPressed: widget.onDelete,
+=======
+            icon: const Icon(
+              Icons.delete,
+              color: Colors.white,
+              ),
+            onPressed: () {
+              widget.onDelete();
+            },
+>>>>>>> 3ff52d1a63112b659edbdd42f1657dcaaa1c31bf
           ),
         ],
       ),
@@ -393,9 +512,9 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.amber,
+        backgroundColor: Color(0xFF001489),
         onPressed: _addSubNote,
-        child: const Icon(Icons.add, color: Colors.black),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
