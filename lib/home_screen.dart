@@ -113,65 +113,6 @@ class _NotesPageState extends State<NotesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-<<<<<<< HEAD
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/background_pattern.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-              decoration: const BoxDecoration(
-                color: Colors.amber,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(50),
-                  bottomRight: Radius.circular(50),
-                ),
-              ),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ProfileScreen(),
-                        ),
-                      );
-                    },
-                    child: const CircleAvatar(
-                      radius: 25,
-                      child: Icon(Icons.person, size: 30),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  const Expanded(
-                    child: Text(
-                      'Hi, Vella',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SettingsScreen(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.settings, size: 30),
-                  ),
-                ],
-              ),
-=======
       body: Stack(
         children: [
           // Background image
@@ -186,7 +127,6 @@ class _NotesPageState extends State<NotesPage> {
                   BlendMode.dstATop,
                 ),
               ),
->>>>>>> 3ff52d1a63112b659edbdd42f1657dcaaa1c31bf
             ),
           ),
           // Main content
@@ -217,31 +157,6 @@ class _NotesPageState extends State<NotesPage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-<<<<<<< HEAD
-                      tileColor: _getNoteColor(index),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => NoteDetailPage(
-                              note: _notes[index],
-                              onUpdate: () => setState(() {}),
-                              onDelete: () {
-                                _deleteNote(index);
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.black),
-                        onPressed: () => _deleteNote(index),
-                      ),
-=======
                     ),
                     IconButton(
                       onPressed: () {
@@ -257,7 +172,6 @@ class _NotesPageState extends State<NotesPage> {
                         size: 30,
                         color: Colors.white,
                         ),
->>>>>>> 3ff52d1a63112b659edbdd42f1657dcaaa1c31bf
                     ),
                   ],
                 ),
@@ -513,10 +427,6 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
         ),
         actions: [
           IconButton(
-<<<<<<< HEAD
-            icon: const Icon(Icons.delete),
-            onPressed: widget.onDelete,
-=======
             icon: const Icon(
               Icons.delete,
               color: Colors.white,
@@ -524,7 +434,6 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
             onPressed: () {
               widget.onDelete();
             },
->>>>>>> 3ff52d1a63112b659edbdd42f1657dcaaa1c31bf
           ),
         ],
       ),
