@@ -5,88 +5,68 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController usernameController = TextEditingController();
-    final TextEditingController genderController = TextEditingController();
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController phoneController = TextEditingController();
+    final TextEditingController usernameController =
+        TextEditingController(text: "Vella Wijayanti");
+    final TextEditingController genderController =
+        TextEditingController(text: "Female");
+    final TextEditingController emailController =
+        TextEditingController(text: "vellacute@gmail.com");
+    final TextEditingController phoneController =
+        TextEditingController(text: "+6281234567890");
 
     return Scaffold(
-      backgroundColor: const Color(0xFF002885), // Biru gelap
+      backgroundColor: const Color(0xFF002885),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () {
-                    Navigator.pop(context); // kembali ke home_screen.dart
-                  },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "PROFILE",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              const CircleAvatar(
-                radius: 45,
-                backgroundColor: Colors.grey,
-                child: Icon(Icons.person, size: 60, color: Colors.black),
-              ),
-              const SizedBox(height: 20),
-
-              // Username Field
-              _buildTextField("Username", usernameController),
-              const SizedBox(height: 12),
-
-              // Gender Field
-              _buildTextField("Gender", genderController),
-              const SizedBox(height: 12),
-
-              // Email Field
-              _buildTextField("Email", emailController),
-              const SizedBox(height: 12),
-
-              // Phone Number Field
-              _buildTextField("Phone Number", phoneController),
-              const SizedBox(height: 24),
-
-              // Save Button
-              ElevatedButton(
-                onPressed: () {
-                  // Simpan data
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
-                ),
-                child: const Text(
-                  "SAVE",
+                const SizedBox(height: 10),
+                const Text(
+                  "PROFILE",
                   style: TextStyle(
-                    color: Color(0xFF002885),
+                    color: Colors.white,
+                    fontSize: 26,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 10),
+                const CircleAvatar(
+                  radius: 45,
+                  backgroundColor: Colors.grey,
+                  child: Icon(Icons.person, size: 60, color: Colors.black),
+                ),
+                const SizedBox(height: 20),
+
+                _buildReadOnlyField("Username", usernameController),
+                const SizedBox(height: 12),
+                _buildReadOnlyField("Gender", genderController),
+                const SizedBox(height: 12),
+                _buildReadOnlyField("Email", emailController),
+                const SizedBox(height: 12),
+                _buildReadOnlyField("Phone Number", phoneController),
+                const SizedBox(height: 32),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller) {
+  Widget _buildReadOnlyField(String label, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -101,6 +81,7 @@ class ProfileScreen extends StatelessWidget {
         const SizedBox(height: 6),
         TextField(
           controller: controller,
+          enabled: false,
           style: const TextStyle(color: Colors.black),
           decoration: InputDecoration(
             filled: true,
