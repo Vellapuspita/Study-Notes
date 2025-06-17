@@ -125,6 +125,7 @@ class _NotesPageState extends State<NotesPage> {
                 image: const AssetImage('assets/images/background_pattern.png'),
                 fit: BoxFit.cover, // Ensures the image covers the entire screen
                 colorFilter: ColorFilter.mode(
+                  // ignore: deprecated_member_use
                   Colors.brown.withOpacity(0.1), // Makes the image slightly transparent
                   BlendMode.dstATop,
                 ),
@@ -137,7 +138,7 @@ class _NotesPageState extends State<NotesPage> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                 decoration: const BoxDecoration(
-                  color: Colors.amber,
+                  color: Color(0xFF001489),
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(50),
                     bottomRight: Radius.circular(50),
@@ -154,6 +155,7 @@ class _NotesPageState extends State<NotesPage> {
                       child: Text(
                         'Hi, Vella',
                         style: TextStyle(
+                          color: Colors.white,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -168,7 +170,11 @@ class _NotesPageState extends State<NotesPage> {
                           ),
                         );
                       },
-                      icon: const Icon(Icons.settings, size: 30),
+                      icon: const Icon(
+                        Icons.settings, 
+                        size: 30,
+                        color: Colors.white,
+                        ),
                     ),
                   ],
                 ),
@@ -217,7 +223,7 @@ class _NotesPageState extends State<NotesPage> {
                           );
                         },
                         trailing: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.black),
+                          icon: const Icon(Icons.delete, color: Colors.white),
                           onPressed: () {
                             _deleteNote(index); // Call the delete method
                           },
@@ -230,16 +236,22 @@ class _NotesPageState extends State<NotesPage> {
 
               Container(
                 color: 
-                Colors.amber,
+                Color(0xFF001489),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                IconButton(icon: const Icon(Icons.home), onPressed: () {}),
+                                IconButton(icon: const Icon(
+                                  color: Colors.white,
+                                  Icons.home,
+                                  ), onPressed: () {}),
                                 IconButton(
-                    icon: const Icon(Icons.notes),
+                    icon: const Icon(
+                      Icons.notes,
+                      color: Colors.white,
+                      ),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -259,9 +271,9 @@ class _NotesPageState extends State<NotesPage> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(10.0),
         child: FloatingActionButton(
-          backgroundColor: Colors.amber,
+          backgroundColor: Color(0xFF001489),
           onPressed: _addNote,
-          child: const Icon(Icons.add, color: Colors.black),
+          child: const Icon(Icons.add, color: Colors.white),
           shape: const CircleBorder(),
           elevation: 10,
         ),
@@ -386,11 +398,14 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.amber,
+        backgroundColor: Color(0xFF001489),
         title: Text(widget.note.title),
         actions: [
           IconButton(
-            icon: const Icon(Icons.delete),
+            icon: const Icon(
+              Icons.delete,
+              color: Colors.white,
+              ),
             onPressed: () {
               widget.onDelete();
             },
@@ -419,9 +434,9 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.amber,
+        backgroundColor: Color(0xFF001489),
         onPressed: _addSubNote,
-        child: const Icon(Icons.add, color: Colors.black),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
