@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/edit_profile_page.dart';
 import 'profile_page.dart';
 import 'package:flutter_application_1/todolist_page.dart';
 import 'settings_screen.dart';
