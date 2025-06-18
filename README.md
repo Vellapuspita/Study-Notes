@@ -1,4 +1,4 @@
-# API-Graphql-Studi-Notes
+# Studi-Notes
 
 Aplikasi Study Notes ini dikembangkan sebagai solusi digital untuk kebutuhan pencatatan materi belajar yang terstruktur, praktis dan mudah diakses dimana saja. Pengguna sering kali mengalami kendala dalam mengatur catatan dari berbagai topik. Dengan adanya aplikasi ini, pengguna dapat membuat, mengelompokkan, serta mengatur catatan sesuai kategori yang diinginkan. Pembuatan aplikasi ini menggunakan Flutter, karena Flutter dapat berjalan di berbagai platform dengan antarmuka yang responsif, interaktif, dan user-friendly.
 
