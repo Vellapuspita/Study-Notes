@@ -5,8 +5,7 @@ Aplikasi Study Notes ini dikembangkan sebagai solusi digital untuk kebutuhan pen
 ---
 
 ### 🚀 Apa yang Bisa Dilakukan?
-Dengan Study Notes, kamu bisa:
-
+Dengan Study Notes, kamu bisa:|
 ✅ Mendaftar dan login sebagai pengguna
 ✅ Menulis dan menyimpan catatan belajar
 ✅ Mengatur topik catatan (misalnya: Matematika, Web Development)
@@ -15,7 +14,8 @@ Dengan Study Notes, kamu bisa:
 ✅ Mengakses API GraphQL secara aman menggunakan JWT (token login)
 
 ### 🔐 Fitur Autentikasi
-Aplikasi ini dilengkapi sistem login yang aman menggunakan JWT (JSON Web Token). Setelah login, pengguna akan mendapatkan token yang bisa digunakan untuk mengakses semua data miliknya. Token ini dicek secara otomatis melalui middleware, jadi data pengguna tetap aman.
+Aplikasi ini dilengkapi sistem login yang aman menggunakan JWT (JSON Web Token). 
+Setelah login, pengguna akan mendapatkan token yang bisa digunakan untuk mengakses semua data miliknya. Token ini dicek secara otomatis melalui middleware, jadi data pengguna tetap aman.
 
 ----
 
