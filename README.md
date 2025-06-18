@@ -5,7 +5,7 @@ Aplikasi Study Notes ini dikembangkan sebagai solusi digital untuk kebutuhan pen
 ---
 
 ### 🚀 Apa yang Bisa Dilakukan?
-Dengan Study Notes, kamu bisa:|
+Dengan Study Notes, kamu bisa:
 - ✅ Mendaftar dan login sebagai pengguna
 - ✅ Menulis dan menyimpan catatan belajar
 - ✅ Mengatur topik catatan (misalnya: Matematika, Web Development)
