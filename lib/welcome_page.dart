@@ -29,10 +29,7 @@ class WelcomePage extends StatelessWidget {
             const SizedBox(height: 24),
 
             //gambar
-            Image.asset(
-              'assets/images/notes_list.png',
-              height: 200,
-            ),
+            Image.asset('assets/images/login.png', height: 300),
 
             const SizedBox(height: 24),
 
@@ -69,7 +66,7 @@ class WelcomePage extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color:  Color(0xFF001489),
+                    color: Color(0xFF001489),
                     fontFamily: 'Poppins',
                   ),
                 ),
@@ -89,20 +86,22 @@ class WelcomePage extends StatelessWidget {
                 alignment: Alignment.center,
                 child: RichText(
                   text: const TextSpan(
-                      style: TextStyle(
-                          fontFamily: 'Poppins',
-                          color: Colors.white,
-                          decoration: TextDecoration.none),
-                      children: [
-                        TextSpan(text: 'Already have an account? '),
-                        TextSpan(
-                          text: 'Sign In',
-                          style: TextStyle(
-                            color: Color(0xFFFCCB00),
-                            decoration: TextDecoration.underline,
-                          ),
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      color: Colors.white,
+                      decoration: TextDecoration.none,
+                    ),
+                    children: [
+                      TextSpan(text: 'Already have an account? '),
+                      TextSpan(
+                        text: 'Sign In',
+                        style: TextStyle(
+                          color: Color(0xFFFCCB00),
+                          decoration: TextDecoration.underline,
                         ),
-                      ]),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
