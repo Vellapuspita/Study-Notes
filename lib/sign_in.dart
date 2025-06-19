@@ -4,7 +4,7 @@ import 'package:flutter_application_1/graphql/mutations/login_mutation.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'services/auth_services.dart'; // Import AuthServices
 import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
-import 'home_screen.dart'; // Import HomeScreen
+// Import HomeScreen
 
 class SignInPage extends StatelessWidget {
   static const String id = '/signin'; //identifikasi untuk rute SignInPage
@@ -152,8 +152,18 @@ class SignInPage extends StatelessWidget {
   }
 
   Future<void> _handleSignIn(BuildContext context) async {
+  if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please fill in all fields')),
+    );
+    return;
+  }
+
   try {
     final client = await getGraphQLClient();
+
+    print('Email: ${emailController.text}');
+    print('Password: ${passwordController.text}');
 
     final result = await client.mutate(
       MutationOptions(
@@ -168,7 +178,7 @@ class SignInPage extends StatelessWidget {
     if (result.hasException) {
       print('GraphQL Error: ${result.exception.toString()}');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Login error: ${result.exception.toString()}')),
+        SnackBar(content: Text('Error: ${result.exception?.graphqlErrors?.first.message ?? 'Unknown error'}')),
       );
       return;
     }
