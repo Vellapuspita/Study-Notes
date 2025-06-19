@@ -5,6 +5,7 @@ import 'package:flutter_application_1/reset_password.dart';
 import 'sign_in.dart';
 import 'sign_up.dart';
 import 'welcome_page.dart';
+import 'discussion_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/homescreen': (context) => const HomeScreen(),
         '/forgotpassword': (context) => ForgotPasswordPage(),
         '/resetpassword': (context) => const ResetPasswordPage(),
+        '/discussion': (context) => const DiscussionPage(),
       },
     );
   }
