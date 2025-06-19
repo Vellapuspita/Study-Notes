@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'profile_page.dart';
-import 'package:flutter_application_1/todolist_page.dart';
 import 'settings_screen.dart';
 import 'discussion_page.dart';
-
-void main() {
-  runApp(const HomeScreen());
-}
+import 'package:flutter_application_1/todolist_page.dart';
 
 class Note {
   String title;
   List<String> subNotes;
 
   Note({required this.title, List<String>? subNotes})
-    : subNotes = subNotes ?? [];
+      : subNotes = subNotes ?? [];
 }
 
 class HomeScreen extends StatelessWidget {
@@ -46,56 +42,23 @@ class _NotesPageState extends State<NotesPage> {
   final List<Note> _notes = [];
 
   void _addNote() {
-    TextEditingController controller = TextEditingController();
+    TextEditingController noteController = TextEditingController();
 
     showDialog(
       context: context,
-<<<<<<< HEAD
       builder: (context) => AlertDialog(
         title: const Text('Add New Note'),
         content: SizedBox(
           height: 50,
           child: TextField(
-            controller: controller,
+            controller: noteController,
             decoration: const InputDecoration(
               hintText: 'Enter note title',
               border: OutlineInputBorder(),
-=======
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Add New Note'),
-            content: SizedBox(
-              height: 50,
-              child: TextField(
-                controller: _controller,
-                decoration: const InputDecoration(
-                  hintText: 'Enter note title',
-                  border: OutlineInputBorder(),
-                ),
-                autofocus: true,
-                maxLines: 1,
-              ),
->>>>>>> 90874ab9cb7d9618736eba1ac1c05bc587ed055b
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_controller.text.isNotEmpty) {
-                    setState(() {
-                      _notes.add(Note(title: _controller.text.toUpperCase()));
-                    });
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Add'),
-              ),
-            ],
+            autofocus: true,
+            maxLines: 1,
           ),
-<<<<<<< HEAD
         ),
         actions: [
           TextButton(
@@ -104,9 +67,9 @@ class _NotesPageState extends State<NotesPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              if (controller.text.isNotEmpty) {
+              if (noteController.text.isNotEmpty) {
                 setState(() {
-                  _notes.add(Note(title: controller.text.toUpperCase()));
+                  _notes.add(Note(title: noteController.text.toUpperCase()));
                 });
                 Navigator.pop(context);
               }
@@ -115,34 +78,31 @@ class _NotesPageState extends State<NotesPage> {
           ),
         ],
       ),
-=======
->>>>>>> 90874ab9cb7d9618736eba1ac1c05bc587ed055b
     );
   }
 
   void _deleteNote(int index) {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Delete Note'),
-            content: const Text('Are you sure you want to delete this note?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _notes.removeAt(index);
-                  });
-                  Navigator.pop(context);
-                },
-                child: const Text('Delete'),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Note'),
+        content: const Text('Are you sure you want to delete this note?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
           ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _notes.removeAt(index);
+              });
+              Navigator.pop(context);
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -156,12 +116,9 @@ class _NotesPageState extends State<NotesPage> {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: const AssetImage('assets/images/background_pattern.png'),
-                fit: BoxFit.cover, // Ensures the image covers the entire screen
+                fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                  // ignore: deprecated_member_use
-                  Colors.brown.withOpacity(
-                    0.1,
-                  ), // Makes the image slightly transparent
+                  Colors.brown.withOpacity(0.1),
                   BlendMode.dstATop,
                 ),
               ),
@@ -171,10 +128,7 @@ class _NotesPageState extends State<NotesPage> {
           Column(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 30,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                 decoration: const BoxDecoration(
                   color: Color(0xFF001489),
                   borderRadius: BorderRadius.only(
@@ -201,7 +155,7 @@ class _NotesPageState extends State<NotesPage> {
                     const SizedBox(width: 10),
                     const Expanded(
                       child: Text(
-                        'Hi, Vella',
+                        'Hi, User',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -251,32 +205,14 @@ class _NotesPageState extends State<NotesPage> {
                             fontSize: 16,
                           ),
                         ),
-                        tileColor: _getNoteColor(
-                          index,
-                        ), // Set the background color
+                        tileColor: Colors.lightBlueAccent.shade100,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (_) => NoteDetailPage(
-                                    note: _notes[index],
-                                    onUpdate: () => setState(() {}),
-                                    onDelete: () {
-                                      _deleteNote(index);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                            ),
-                          );
-                        },
                         trailing: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.white),
+                          icon: const Icon(Icons.delete, color: Colors.red),
                           onPressed: () {
-                            _deleteNote(index); // Call the delete method
+                            _deleteNote(index);
                           },
                         ),
                       ),
@@ -284,421 +220,13 @@ class _NotesPageState extends State<NotesPage> {
                   },
                 ),
               ),
-
-              Container(
-                color: Color(0xFF001489),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        IconButton(
-                          icon: const Icon(color: Colors.white, Icons.home),
-                          onPressed: () {},
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.notes, color: Colors.white),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const TodoPage(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
             ],
-          ),
-        ],
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: FloatingActionButton(
-          backgroundColor: Color(0xFF001489),
-          onPressed: _addNote,
-          shape: const CircleBorder(),
-          elevation: 10,
-          child: const Icon(Icons.add, color: Colors.white),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    );
-  }
-
-  Color _getNoteColor(int index) {
-    List<Color> colors = [
-      Colors.greenAccent,
-      Colors.redAccent.shade100,
-      Colors.pinkAccent.shade100,
-      Colors.lightGreenAccent,
-      Colors.orangeAccent.shade100,
-      Colors.deepOrangeAccent.shade100,
-      Colors.purpleAccent.shade100,
-      Colors.tealAccent.shade100,
-    ];
-    return colors[index % colors.length];
-  }
-}
-
-class NoteDetailPage extends StatefulWidget {
-  final Note note;
-  final VoidCallback onUpdate;
-  final VoidCallback onDelete;
-
-  const NoteDetailPage({
-    super.key,
-    required this.note,
-    required this.onUpdate,
-    required this.onDelete,
-  });
-
-  @override
-  State<NoteDetailPage> createState() => _NoteDetailPageState();
-}
-
-class _NoteDetailPageState extends State<NoteDetailPage> {
-  final Map<int, Color> _noteColors =
-      {}; // Store background colors for each sub-note
-
-  void _addSubNote() {
-    TextEditingController controller = TextEditingController();
-
-    showDialog(
-      context: context,
-<<<<<<< HEAD
-      builder: (context) => AlertDialog(
-        title: const Text('Add Detail Note'),
-        content: SizedBox(
-          height: 150, 
-          width: 100,// Fixed height for the input field
-          child: TextField(
-            controller: controller,
-            decoration: const InputDecoration(
-              hintText: 'Enter detail',
-              border: OutlineInputBorder(), // Add a border for better visibility
-=======
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Add Detail Note'),
-            content: SizedBox(
-              height: 150,
-              width: 100, // Fixed height for the input field
-              child: TextField(
-                controller: _controller,
-                decoration: const InputDecoration(
-                  hintText: 'Enter detail',
-                  border:
-                      OutlineInputBorder(), // Add a border for better visibility
-                ),
-                autofocus: true,
-                maxLines: null, // Allow the input field to expand vertically
-              ),
->>>>>>> 90874ab9cb7d9618736eba1ac1c05bc587ed055b
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_controller.text.isNotEmpty) {
-                    setState(() {
-                      widget.note.subNotes.add(_controller.text);
-                      _noteColors[widget.note.subNotes.length - 1] =
-                          Colors.white; // Default color
-                    });
-                    widget.onUpdate();
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Add'),
-              ),
-            ],
-          ),
-<<<<<<< HEAD
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (controller.text.isNotEmpty) {
-                setState(() {
-                  widget.note.subNotes.add(controller.text);
-                  _noteColors[widget.note.subNotes.length - 1] = Colors.white; // Default color
-                });
-                widget.onUpdate();
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Add'),
-          ),
-        ],
-      ),
-=======
->>>>>>> 90874ab9cb7d9618736eba1ac1c05bc587ed055b
-    );
-  }
-
-  void _editSubNote(int index) {
-<<<<<<< HEAD
-    TextEditingController controller =
-        TextEditingController(text: widget.note.subNotes[index]);
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Edit Detail Note'),
-        content: SizedBox(
-          height: 150, // Fixed height for the input field
-          child: TextField(
-            controller: controller,
-            decoration: const InputDecoration(
-              hintText: 'Edit detail',
-              border: OutlineInputBorder(), // Add a border for better visibility
-=======
-    TextEditingController _controller = TextEditingController(
-      text: widget.note.subNotes[index],
-    );
-
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Edit Detail Note'),
-            content: SizedBox(
-              height: 150, // Fixed height for the input field
-              child: TextField(
-                controller: _controller,
-                decoration: const InputDecoration(
-                  hintText: 'Edit detail',
-                  border:
-                      OutlineInputBorder(), // Add a border for better visibility
-                ),
-                autofocus: true,
-                maxLines: null, // Allow the input field to expand vertically
-              ),
->>>>>>> 90874ab9cb7d9618736eba1ac1c05bc587ed055b
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_controller.text.isNotEmpty) {
-                    setState(() {
-                      widget.note.subNotes[index] = _controller.text;
-                    });
-                    widget.onUpdate();
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Save'),
-              ),
-            ],
-          ),
-<<<<<<< HEAD
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (controller.text.isNotEmpty) {
-                setState(() {
-                  widget.note.subNotes[index] = controller.text;
-                });
-                widget.onUpdate();
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-=======
->>>>>>> 90874ab9cb7d9618736eba1ac1c05bc587ed055b
-    );
-  }
-
-  void _changeNoteColor(int index, Color color) {
-    setState(() {
-      _noteColors[index] = color;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF001489),
-        title: Text(widget.note.title),
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.delete, color: Colors.white),
-            onPressed: () {
-              widget.onDelete();
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Grid layout for sub-notes
-          Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Number of columns
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-              itemCount: widget.note.subNotes.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  color:
-                      _noteColors[index] ??
-                      Colors.white, // Use the stored color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  elevation: 5,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.note.subNotes[index],
-                          maxLines: 3, // Limit preview to 3 lines
-                          overflow:
-                              TextOverflow
-                                  .ellipsis, // Add ellipsis for overflow
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Tombol Edit
-                            IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.blue),
-                              tooltip: 'Edit Detail Note',
-                              onPressed: () => _editSubNote(index),
-                            ),
-
-                            // Tombol Buka Diskusi
-                            IconButton(
-                              icon: const Icon(Icons.chat, color: Colors.green),
-                              tooltip: 'Diskusi',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => DiscussionPage(
-                                          subNoteContent:
-                                              widget.note.subNotes[index],
-                                        ),
-                                  ),
-                                );
-                              },
-                            ),
-
-                            // Tombol Ganti Warna
-                            PopupMenuButton<Color>(
-                              icon: const Icon(
-                                Icons.color_lens,
-                                color: Colors.purple,
-                              ),
-                              tooltip: 'Ganti Warna',
-                              onSelected:
-                                  (color) => _changeNoteColor(index, color),
-                              itemBuilder:
-                                  (context) => [
-                                    PopupMenuItem(
-                                      value: const Color(
-                                        0xFFFFD1DC,
-                                      ), // Pastel pink
-                                      child: const CircleAvatar(
-                                        backgroundColor: Color(0xFFFFD1DC),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      value: const Color(
-                                        0xFFB3E5FC,
-                                      ), // Pastel blue
-                                      child: const CircleAvatar(
-                                        backgroundColor: Color(0xFFB3E5FC),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      value: const Color(
-                                        0xFFCCFF90,
-                                      ), // Pastel green
-                                      child: const CircleAvatar(
-                                        backgroundColor: Color(0xFFCCFF90),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      value: const Color(
-                                        0xFFFFFF8D,
-                                      ), // Pastel yellow
-                                      child: const CircleAvatar(
-                                        backgroundColor: Color(0xFFFFFF8D),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      value: const Color(
-                                        0xFFE1BEE7,
-                                      ), // Pastel purple
-                                      child: const CircleAvatar(
-                                        backgroundColor: Color(0xFFE1BEE7),
-                                      ),
-                                    ),
-                                  ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFF001489),
-        onPressed: _addSubNote,
+        onPressed: _addNote,
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );
