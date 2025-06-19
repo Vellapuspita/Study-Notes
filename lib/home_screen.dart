@@ -311,20 +311,6 @@ class _NotesPageState extends State<NotesPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
-
-  Color _getNoteColor(int index) {
-    List<Color> colors = [
-      Colors.greenAccent,
-      Colors.redAccent.shade100,
-      Colors.pinkAccent.shade100,
-      Colors.lightGreenAccent,
-      Colors.orangeAccent.shade100,
-      Colors.deepOrangeAccent.shade100,
-      Colors.purpleAccent.shade100,
-      Colors.tealAccent.shade100,
-    ];
-    return colors[index % colors.length];
-  }
 }
 
 class NoteDetailPage extends StatefulWidget {
