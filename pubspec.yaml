@@ -77,3 +77,8 @@ flutter:
   
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+dependencies:
+  flutter:
+    sdk: flutter
+  intl: ^0.18.1  # untuk format waktu (opsional)
