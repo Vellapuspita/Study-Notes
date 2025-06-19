@@ -1,5 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
 
 class DiscussionPage extends StatefulWidget {
   final String subNoteContent;
@@ -21,22 +25,100 @@ class ChatMessage {
 class _DiscussionPageState extends State<DiscussionPage> {
   final _controller = TextEditingController();
   final List<ChatMessage> _messages = [];
+  late WebSocketChannel _channel;
+  String _userName = "Unknown";
+  bool _isConnected = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName().then((_) => _connectWebSocket());
+  }
+
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    _userName = prefs.getString('userName') ?? 'Unknown';
+  }
+
+  void _connectWebSocket() {
+    _channel = WebSocketChannel.connect(
+      Uri.parse('ws://192.168.1.113:8080/ws'), // Ganti sesuai IP server
+    );
+
+    _channel.stream.listen(
+      (data) {
+        final parsedData = _parseMessage(data);
+        if (parsedData != null) {
+          setState(() {
+            _messages.add(parsedData);
+            _isConnected = true;
+          });
+        }
+      },
+      onDone: () {
+        setState(() {
+          _isConnected = false;
+        });
+        print("🔴 WebSocket connection closed");
+      },
+      onError: (error) {
+        setState(() {
+          _isConnected = false;
+        });
+        print("❌ WebSocket error: $error");
+      },
+    );
+
+    setState(() {
+      _isConnected = true;
+    });
+  }
+
+  @override
+  void dispose() {
+    _channel.sink.close(status.goingAway);
+    super.dispose();
+  }
 
   void _sendMessage() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
 
     final newMsg = ChatMessage(
-      user: "Fela", // bisa diganti dengan nama user login
+      user: _userName,
       message: text,
       time: DateTime.now(),
     );
+
+    _channel.sink.add(_formatMessage(newMsg));
 
     setState(() {
       _messages.add(newMsg);
     });
 
     _controller.clear();
+  }
+
+  String _formatMessage(ChatMessage message) {
+    return jsonEncode({
+      'user': message.user,
+      'message': message.message,
+      'time': message.time.toIso8601String(),
+    });
+  }
+
+  ChatMessage? _parseMessage(String data) {
+    try {
+      final json = jsonDecode(data);
+      return ChatMessage(
+        user: json['user'],
+        message: json['message'],
+        time: DateTime.parse(json['time']),
+      );
+    } catch (e) {
+      print("❌ Error parsing message: $e");
+      return null;
+    }
   }
 
   String _formatTime(DateTime time) {
@@ -49,6 +131,22 @@ class _DiscussionPageState extends State<DiscussionPage> {
       appBar: AppBar(
         title: const Text("Diskusi Study Notes"),
         backgroundColor: Colors.blueAccent,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: Row(
+              children: [
+                Icon(
+                  _isConnected ? Icons.circle : Icons.circle_outlined,
+                  size: 12,
+                  color: _isConnected ? Colors.green : Colors.red,
+                ),
+                const SizedBox(width: 6),
+                Text(_isConnected ? 'Online' : 'Offline'),
+              ],
+            ),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -63,14 +161,13 @@ class _DiscussionPageState extends State<DiscussionPage> {
               ),
             ),
           ),
-
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(12),
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final msg = _messages[index];
-                final isMe = msg.user == "Fela";
+                final isMe = msg.user == _userName;
 
                 return Align(
                   alignment:
@@ -86,10 +183,9 @@ class _DiscussionPageState extends State<DiscussionPage> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
-                      crossAxisAlignment:
-                          isMe
-                              ? CrossAxisAlignment.end
-                              : CrossAxisAlignment.start,
+                      crossAxisAlignment: isMe
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
                       children: [
                         Text(
                           msg.user,
