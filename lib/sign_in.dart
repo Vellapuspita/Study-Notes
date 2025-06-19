@@ -3,7 +3,8 @@ import 'package:flutter_application_1/graphql/graphql_client.dart';
 import 'package:flutter_application_1/graphql/mutations/login_mutation.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'services/auth_services.dart'; // Import AuthServices
-
+import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
+import 'home_screen.dart'; // Import HomeScreen
 
 class SignInPage extends StatelessWidget {
   static const String id = '/signin'; // Identifier route for navigation
@@ -149,53 +150,56 @@ class SignInPage extends StatelessWidget {
   }
 
   Future<void> _handleSignIn(BuildContext context) async {
-    try {
-      final client = await getGraphQLClient(); // Await the GraphQL client
+  try {
+    final client = await getGraphQLClient();
 
-      // Debugging: Log the mutation and variables
-      print('Sending GraphQL mutation: $loginMutation');
-      print('Variables: ${{
-        'email': emailController.text,
-        'password': passwordController.text,
-      }}}');
+    final result = await client.mutate(
+      MutationOptions(
+        document: gql(loginMutation),
+        variables: {
+          'email': emailController.text.trim(),
+          'password': passwordController.text.trim(),
+        },
+      ),
+    );
 
-      final result = await client.mutate(
-        MutationOptions(
-          document: gql(loginMutation), // Use the login mutation
-          variables: {
-            'email': emailController.text,
-            'password': passwordController.text,
-          },
-        ),
+    if (result.hasException) {
+      print('GraphQL Error: ${result.exception.toString()}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login error: ${result.exception.toString()}')),
+      );
+      return;
+    }
+
+    final loginData = result.data?['login'];
+    final token = loginData?['token'];
+    final username = loginData?['user']?['name'];
+
+    if (token != null && username != null) {
+      await AuthServices.saveToken(token);
+      await saveUserData(username);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login successful!')),
       );
 
-      if (result.hasException) {
-        // Handle GraphQL errors
-        print('GraphQL Error: ${result.exception.toString()}');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${result.exception.toString()}')),
-        );
-      } else {
-        // Handle successful login
-        final token = result.data?['login']['token'];
-        if (token != null) {
-          await AuthServices.saveToken(token); // Save the token using AuthServices
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Login successful!')),
-          );
-          Navigator.pushReplacementNamed(context, '/homescreen'); // Navigate to home screen
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Invalid login credentials')),
-          );
-        }
-      }
-    } catch (e) {
-      // Handle unexpected errors
-      print('Unexpected Error: $e');
+      Navigator.pushReplacementNamed(context, '/homescreen');
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An unexpected error occurred: $e')),
+        const SnackBar(content: Text('Invalid login credentials')),
       );
     }
+  } catch (e) {
+    print('Unexpected Error: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Unexpected error: $e')),
+    );
+  }
+}
+
+  
+  Future<void> saveUserData(String username) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', username); // Simpan username dari backend
   }
 }

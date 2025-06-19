@@ -3,6 +3,7 @@ import 'package:flutter_application_1/graphql/mutations/register_mutation.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'services/auth_services.dart'; // Import AuthServices
 import 'package:flutter_application_1/graphql/graphql_client.dart'; // Import GraphQL client setup
+import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 
 class SignUpPage extends StatelessWidget {
   static const String id = '/signup'; // Routing
@@ -11,7 +12,7 @@ class SignUpPage extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
-  SignUpPage({super.key}); // Removed `const` keyword
+  SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +100,7 @@ class SignUpPage extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
@@ -122,65 +124,83 @@ class SignUpPage extends StatelessWidget {
   }
 
   Future<void> _handleSignUp(BuildContext context) async {
-  if (passwordController.text != confirmPasswordController.text) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Passwords do not match')),
-    );
-    return;
-  }
-
-  try {
-    final client = await getGraphQLClient();
-
-    // Log debug
-    print('Sending GraphQL mutation: $registerMutation');
-    print('Variables: ${{
-      'input': {
-        'name': usernameController.text,
-        'email': emailController.text,
-        'password': passwordController.text,
-        'confirmPassword': confirmPasswordController.text,
-      }
-    }}');
-
-    final result = await client.mutate(
-      MutationOptions(
-        document: gql(registerMutation),
-        variables: {
-          'input': {
-            'name': usernameController.text,
-            'email': emailController.text,
-            'password': passwordController.text,
-            'confirmPassword': confirmPasswordController.text,
-          }
-        },
-      ),
-    );
-
-    if (result.hasException) {
-      print('GraphQL Error: ${result.exception.toString()}');
+    if (usernameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        passwordController.text.isEmpty ||
+        confirmPasswordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${result.exception.toString()}')),
+        const SnackBar(content: Text('Please fill in all fields')),
       );
-    } else {
-      final token = result.data?['register']['token'];
-      if (token != null) {
-        await AuthServices.saveToken(token);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration successful!')),
-        );
-        Navigator.pushReplacementNamed(context, '/homescreen');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration failed')),
-        );
-      }
+      return;
     }
-  } catch (e) {
-    print('Unexpected Error: $e');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('An unexpected error occurred: $e')),
-    );
+
+    if (passwordController.text != confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match')),
+      );
+      return;
+    }
+
+    try {
+      final client = await getGraphQLClient();
+
+      // Log debug
+      print('Sending GraphQL mutation: $registerMutation');
+      print('Variables: ${{
+        'input': {
+          'name': usernameController.text,
+          'email': emailController.text,
+          'password': passwordController.text,
+          'confirmPassword': confirmPasswordController.text,
+        }
+      }}}');
+
+      final result = await client.mutate(
+        MutationOptions(
+          document: gql(registerMutation),
+          variables: {
+            'input': {
+              'name': usernameController.text,
+              'email': emailController.text,
+              'password': passwordController.text,
+              'confirmPassword': confirmPasswordController.text,
+            }
+          },
+        ),
+      );
+
+      if (result.hasException) {
+        print('GraphQL Error: ${result.exception.toString()}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${result.exception.toString()}')),
+        );
+      } else {
+        final token = result.data?['register']['token'];
+        final username = usernameController.text; // Ambil username dari input
+
+        if (token != null) {
+          await AuthServices.saveToken(token); // Simpan token
+          await saveUserData(username); // Simpan username ke SharedPreferences
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Registration successful!')),
+          );
+          Navigator.pushReplacementNamed(context, '/homescreen'); // Navigasi ke HomeScreen
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Registration failed')),
+          );
+        }
+      }
+    } catch (e) {
+      print('Unexpected Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An unexpected error occurred: $e')),
+      );
+    }
   }
-}
+
+  Future<void> saveUserData(String username) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', username); // Simpan username dari input
+  }
 }
