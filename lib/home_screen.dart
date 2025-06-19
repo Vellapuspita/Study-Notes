@@ -3,10 +3,7 @@ import 'profile_page.dart';
 import 'package:flutter_application_1/todolist_page.dart';
 import 'settings_screen.dart';
 import 'discussion_page.dart';
-
-void main() {
-  runApp(const HomeScreen());
-}
+import 'package:flutter_application_1/todolist_page.dart';
 
 class Note {
   String title;
@@ -44,6 +41,20 @@ class NotesPage extends StatefulWidget {
 
 class _NotesPageState extends State<NotesPage> {
   final List<Note> _notes = [];
+  String _username = ''; // Variabel untuk menyimpan username
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData(); // Ambil data pengguna saat halaman dimuat
+  }
+
+  Future<void> _loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _username = prefs.getString('username') ?? 'User'; // Ambil username
+    });
+  }
 
   void _addNote() {
     TextEditingController controller = TextEditingController();
@@ -165,9 +176,9 @@ class _NotesPageState extends State<NotesPage> {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Hi, Vella',
+                        'Hi, User',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -283,302 +294,6 @@ class _NotesPageState extends State<NotesPage> {
           ),
         ],
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: FloatingActionButton(
-          backgroundColor: Color(0xFF001489),
-          onPressed: _addNote,
-          shape: const CircleBorder(),
-          elevation: 10,
-          child: const Icon(Icons.add, color: Colors.white),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    );
-  }
-
-  Color _getNoteColor(int index) {
-    List<Color> colors = [
-      Colors.greenAccent,
-      Colors.redAccent.shade100,
-      Colors.pinkAccent.shade100,
-      Colors.lightGreenAccent,
-      Colors.orangeAccent.shade100,
-      Colors.deepOrangeAccent.shade100,
-      Colors.purpleAccent.shade100,
-      Colors.tealAccent.shade100,
-    ];
-    return colors[index % colors.length];
-  }
-}
-
-class NoteDetailPage extends StatefulWidget {
-  final Note note;
-  final VoidCallback onUpdate;
-  final VoidCallback onDelete;
-
-  const NoteDetailPage({
-    super.key,
-    required this.note,
-    required this.onUpdate,
-    required this.onDelete,
-  });
-
-  @override
-  State<NoteDetailPage> createState() => _NoteDetailPageState();
-}
-
-class _NoteDetailPageState extends State<NoteDetailPage> {
-  final Map<int, Color> _noteColors =
-      {}; // Store background colors for each sub-note
-
-  void _addSubNote() {
-    TextEditingController controller = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Add Detail Note'),
-            content: SizedBox(
-              height: 150,
-              width: 100,
-              child: TextField(
-                controller: controller,
-                decoration: const InputDecoration(
-                  hintText: 'Enter detail',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (controller.text.isNotEmpty) {
-                    setState(() {
-                      widget.note.subNotes.add(controller.text);
-                      _noteColors[widget.note.subNotes.length - 1] =
-                          Colors.white;
-                    });
-                    widget.onUpdate();
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Add'),
-              ),
-            ],
-          ),
-    );
-  }
-
-  void _editSubNote(int index) {
-    TextEditingController controller = TextEditingController(
-      text: widget.note.subNotes[index],
-    );
-
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Edit Detail Note'),
-            content: SizedBox(
-              height: 150,
-              child: TextField(
-                controller: controller,
-                decoration: const InputDecoration(
-                  hintText: 'Edit detail',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (controller.text.isNotEmpty) {
-                    setState(() {
-                      widget.note.subNotes[index] = controller.text;
-                    });
-                    widget.onUpdate();
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Save'),
-              ),
-            ],
-          ),
-    );
-  }
-
-  void _changeNoteColor(int index, Color color) {
-    setState(() {
-      _noteColors[index] = color;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF001489),
-        title: Text(widget.note.title),
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.delete, color: Colors.white),
-            onPressed: () {
-              widget.onDelete();
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Grid layout for sub-notes
-          Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Number of columns
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-              itemCount: widget.note.subNotes.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  color:
-                      _noteColors[index] ??
-                      Colors.white, // Use the stored color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  elevation: 5,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.note.subNotes[index],
-                          maxLines: 3, // Limit preview to 3 lines
-                          overflow:
-                              TextOverflow
-                                  .ellipsis, // Add ellipsis for overflow
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Tombol Edit
-                            IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.blue),
-                              tooltip: 'Edit Detail Note',
-                              onPressed: () => _editSubNote(index),
-                            ),
-
-                            // Tombol Buka Diskusi
-                            IconButton(
-                              icon: const Icon(Icons.chat, color: Colors.green),
-                              tooltip: 'Diskusi',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => DiscussionPage(
-                                          subNoteContent:
-                                              widget.note.subNotes[index],
-                                        ),
-                                  ),
-                                );
-                              },
-                            ),
-
-                            // Tombol Ganti Warna
-                            PopupMenuButton<Color>(
-                              icon: const Icon(
-                                Icons.color_lens,
-                                color: Colors.purple,
-                              ),
-                              tooltip: 'Ganti Warna',
-                              onSelected:
-                                  (color) => _changeNoteColor(index, color),
-                              itemBuilder:
-                                  (context) => [
-                                    PopupMenuItem(
-                                      value: const Color(
-                                        0xFFFFD1DC,
-                                      ), // Pastel pink
-                                      child: const CircleAvatar(
-                                        backgroundColor: Color(0xFFFFD1DC),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      value: const Color(
-                                        0xFFB3E5FC,
-                                      ), // Pastel blue
-                                      child: const CircleAvatar(
-                                        backgroundColor: Color(0xFFB3E5FC),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      value: const Color(
-                                        0xFFCCFF90,
-                                      ), // Pastel green
-                                      child: const CircleAvatar(
-                                        backgroundColor: Color(0xFFCCFF90),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      value: const Color(
-                                        0xFFFFFF8D,
-                                      ), // Pastel yellow
-                                      child: const CircleAvatar(
-                                        backgroundColor: Color(0xFFFFFF8D),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      value: const Color(
-                                        0xFFE1BEE7,
-                                      ), // Pastel purple
-                                      child: const CircleAvatar(
-                                        backgroundColor: Color(0xFFE1BEE7),
-                                      ),
-                                    ),
-                                  ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFF001489),
         onPressed: _addSubNote,
@@ -587,3 +302,9 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
     );
   }
 }
+
+Future<void> saveUserData(String username) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('username', username); // Simpan username dari backend
+}
+
