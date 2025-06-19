@@ -4,7 +4,7 @@ import 'change_password_page.dart';
 import 'welcome_page.dart'; // Import ChangePasswordPage
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -114,8 +114,7 @@ class HoverableListTile extends StatefulWidget {
   final String title;
   final VoidCallback onTap;
 
-  const HoverableListTile({Key? key, required this.title, required this.onTap})
-    : super(key: key);
+  const HoverableListTile({super.key, required this.title, required this.onTap});
 
   @override
   _HoverableListTileState createState() => _HoverableListTileState();

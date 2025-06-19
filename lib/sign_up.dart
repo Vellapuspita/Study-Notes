@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/graphql/mutations/register_mutation.dart'; // Ensure this file contains the registerMutation
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'services/auth_services.dart'; // Import AuthServices
+import 'package:flutter_application_1/graphql/graphql_client.dart'; // Import GraphQL client setup
 
 class SignUpPage extends StatelessWidget {
-  static const String id = '/signup'; //routing
-  const SignUpPage({super.key});
+  static const String id = '/signup'; // Routing
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+
+  SignUpPage({super.key}); // Removed `const` keyword
 
   @override
   Widget build(BuildContext context) {
@@ -27,23 +36,22 @@ class SignUpPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
-            _buildTextField(label: 'Username'),
+            _buildTextField(controller: usernameController, label: 'Username'),
             const SizedBox(height: 40),
-            _buildTextField(label: 'Email'),
+            _buildTextField(controller: emailController, label: 'Email'),
             const SizedBox(height: 40),
-            _buildTextField(label: 'Password', obscureText: true),
+            _buildTextField(controller: passwordController, label: 'Password', obscureText: true),
             const SizedBox(height: 40),
-            _buildTextField(label: 'Confirm Password', obscureText: true),
+            _buildTextField(controller: confirmPasswordController, label: 'Confirm Password', obscureText: true),
             const SizedBox(height: 32),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/signin'); // navigasi ke halaman sign in
-                  //aksi saat tombol SIGN UP ditekan
+                onPressed: () async {
+                  await _handleSignUp(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFCCB00), // warna kuning
+                  backgroundColor: const Color(0xFFFCCB00),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -91,21 +99,88 @@ class SignUpPage extends StatelessWidget {
       ),
     );
   }
-}
-
-Widget _buildTextField({required String label, bool obscureText = false}) {
-  return TextField(
-    obscureText: obscureText,
-    style: const TextStyle(color: Colors.white),
-    decoration: InputDecoration(
-      labelText: label,
-      labelStyle: const TextStyle(color: Colors.white, fontFamily: 'Poppins'),
-      filled: true,
-      fillColor: const Color(0xFF0033A0),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide.none,
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    bool obscureText = false,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.white, fontFamily: 'Poppins'),
+        filled: true,
+        fillColor: const Color(0xFF0033A0),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide.none,
+        ),
       ),
-    ),
-  );
+    );
+  }
+
+  Future<void> _handleSignUp(BuildContext context) async {
+  if (passwordController.text != confirmPasswordController.text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Passwords do not match')),
+    );
+    return;
+  }
+
+  try {
+    final client = await getGraphQLClient();
+
+    // Log debug
+    print('Sending GraphQL mutation: $registerMutation');
+    print('Variables: ${{
+      'input': {
+        'name': usernameController.text,
+        'email': emailController.text,
+        'password': passwordController.text,
+        'confirmPassword': confirmPasswordController.text,
+      }
+    }}');
+
+    final result = await client.mutate(
+      MutationOptions(
+        document: gql(registerMutation),
+        variables: {
+          'input': {
+            'name': usernameController.text,
+            'email': emailController.text,
+            'password': passwordController.text,
+            'confirmPassword': confirmPasswordController.text,
+          }
+        },
+      ),
+    );
+
+    if (result.hasException) {
+      print('GraphQL Error: ${result.exception.toString()}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${result.exception.toString()}')),
+      );
+    } else {
+      final token = result.data?['register']['token'];
+      if (token != null) {
+        await AuthServices.saveToken(token);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration successful!')),
+        );
+        Navigator.pushReplacementNamed(context, '/homescreen');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration failed')),
+        );
+      }
+    }
+  } catch (e) {
+    print('Unexpected Error: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('An unexpected error occurred: $e')),
+    );
+  }
+}
 }

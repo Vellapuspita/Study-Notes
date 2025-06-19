@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/graphql/graphql_client.dart';
+import 'package:flutter_application_1/graphql/mutations/login_mutation.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'services/auth_services.dart'; // Import AuthServices
+
 
 class SignInPage extends StatelessWidget {
-  static const String id = '/signin'; //identifier route untuk navigasi
-  const SignInPage({super.key});
+  static const String id = '/signin'; // Identifier route for navigation
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  SignInPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,22 +34,23 @@ class SignInPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
-            _buildTextField(label: 'Email'), //membuat field email
+            _buildTextField(controller: emailController, label: 'Email'), // Email field
             const SizedBox(height: 40),
             _buildTextField(
+              controller: passwordController,
               label: 'Password',
               obscureText: true,
-            ), //membuat field password, dengan teks tertutup
+            ), // Password field
             const SizedBox(height: 40),
             Align(
               alignment: Alignment.centerRight,
               child: GestureDetector(
                 onTap: () {
-                  //forgot password
+                  // Forgot password navigation
                   Navigator.pushNamed(
                     context,
                     '/forgotpassword',
-                  ); //navigasi ke halaman forgot password
+                  );
                 },
                 child: const Text(
                   'Forgot password?',
@@ -55,16 +64,12 @@ class SignInPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            //tombol sign in
+            // Sign in button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(
-                    context,
-                    '/homescreen',
-                  ); // navigasi ke halaman home
-                  //aksi saat tombol SIGN IN ditekan
+                onPressed: () async {
+                  await _handleSignIn(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFCCB00),
@@ -85,14 +90,14 @@ class SignInPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            //"don't have an account? sign up"
+            // "Don't have an account? Sign up"
             Center(
               child: GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(
                     context,
                     '/signup',
-                  ); //membawa ke halaman signup
+                  );
                 },
                 child: RichText(
                   text: const TextSpan(
@@ -121,8 +126,13 @@ class SignInPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField({required String label, bool obscureText = false}) {
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    bool obscureText = false,
+  }) {
     return TextField(
+      controller: controller,
       obscureText: obscureText,
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
@@ -136,5 +146,56 @@ class SignInPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _handleSignIn(BuildContext context) async {
+    try {
+      final client = await getGraphQLClient(); // Await the GraphQL client
+
+      // Debugging: Log the mutation and variables
+      print('Sending GraphQL mutation: $loginMutation');
+      print('Variables: ${{
+        'email': emailController.text,
+        'password': passwordController.text,
+      }}}');
+
+      final result = await client.mutate(
+        MutationOptions(
+          document: gql(loginMutation), // Use the login mutation
+          variables: {
+            'email': emailController.text,
+            'password': passwordController.text,
+          },
+        ),
+      );
+
+      if (result.hasException) {
+        // Handle GraphQL errors
+        print('GraphQL Error: ${result.exception.toString()}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${result.exception.toString()}')),
+        );
+      } else {
+        // Handle successful login
+        final token = result.data?['login']['token'];
+        if (token != null) {
+          await AuthServices.saveToken(token); // Save the token using AuthServices
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Login successful!')),
+          );
+          Navigator.pushReplacementNamed(context, '/homescreen'); // Navigate to home screen
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Invalid login credentials')),
+          );
+        }
+      }
+    } catch (e) {
+      // Handle unexpected errors
+      print('Unexpected Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An unexpected error occurred: $e')),
+      );
+    }
   }
 }

@@ -45,7 +45,7 @@ class _NotesPageState extends State<NotesPage> {
   final List<Note> _notes = [];
 
   void _addNote() {
-    TextEditingController _controller = TextEditingController();
+    TextEditingController controller = TextEditingController();
 
     showDialog(
       context: context,
@@ -54,7 +54,7 @@ class _NotesPageState extends State<NotesPage> {
         content: SizedBox(
           height: 50,
           child: TextField(
-            controller: _controller,
+            controller: controller,
             decoration: const InputDecoration(
               hintText: 'Enter note title',
               border: OutlineInputBorder(),
@@ -70,9 +70,9 @@ class _NotesPageState extends State<NotesPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              if (_controller.text.isNotEmpty) {
+              if (controller.text.isNotEmpty) {
                 setState(() {
-                  _notes.add(Note(title: _controller.text.toUpperCase()));
+                  _notes.add(Note(title: controller.text.toUpperCase()));
                 });
                 Navigator.pop(context);
               }
@@ -278,9 +278,9 @@ class _NotesPageState extends State<NotesPage> {
         child: FloatingActionButton(
           backgroundColor: Color(0xFF001489),
           onPressed: _addNote,
-          child: const Icon(Icons.add, color: Colors.white),
           shape: const CircleBorder(),
           elevation: 10,
+          child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -323,7 +323,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
   final Map<int, Color> _noteColors = {}; // Store background colors for each sub-note
 
   void _addSubNote() {
-    TextEditingController _controller = TextEditingController();
+    TextEditingController controller = TextEditingController();
 
     showDialog(
       context: context,
@@ -333,7 +333,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
           height: 150, 
           width: 100,// Fixed height for the input field
           child: TextField(
-            controller: _controller,
+            controller: controller,
             decoration: const InputDecoration(
               hintText: 'Enter detail',
               border: OutlineInputBorder(), // Add a border for better visibility
@@ -349,9 +349,9 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              if (_controller.text.isNotEmpty) {
+              if (controller.text.isNotEmpty) {
                 setState(() {
-                  widget.note.subNotes.add(_controller.text);
+                  widget.note.subNotes.add(controller.text);
                   _noteColors[widget.note.subNotes.length - 1] = Colors.white; // Default color
                 });
                 widget.onUpdate();
@@ -366,7 +366,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
   }
 
   void _editSubNote(int index) {
-    TextEditingController _controller =
+    TextEditingController controller =
         TextEditingController(text: widget.note.subNotes[index]);
 
     showDialog(
@@ -376,7 +376,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
         content: SizedBox(
           height: 150, // Fixed height for the input field
           child: TextField(
-            controller: _controller,
+            controller: controller,
             decoration: const InputDecoration(
               hintText: 'Edit detail',
               border: OutlineInputBorder(), // Add a border for better visibility
@@ -392,9 +392,9 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              if (_controller.text.isNotEmpty) {
+              if (controller.text.isNotEmpty) {
                 setState(() {
-                  widget.note.subNotes[index] = _controller.text;
+                  widget.note.subNotes[index] = controller.text;
                 });
                 widget.onUpdate();
                 Navigator.pop(context);
