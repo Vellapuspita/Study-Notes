@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         '/homescreen': (context) => const HomeScreen(),
         '/forgotpassword': (context) => ForgotPasswordPage(),
         '/resetpassword': (context) => const ResetPasswordPage(),
-        '/discussion': (context) => const DiscussionPage(),
+        // '/discussion': (context) => const DiscussionPage(),
       },
     );
   }

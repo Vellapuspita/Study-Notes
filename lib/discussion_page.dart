@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DiscussionPage extends StatefulWidget {
-  const DiscussionPage({super.key});
+  final String subNoteContent;
+
+  const DiscussionPage({super.key, required this.subNoteContent});
 
   @override
   State<DiscussionPage> createState() => _DiscussionPageState();
@@ -50,6 +52,18 @@ class _DiscussionPageState extends State<DiscussionPage> {
       ),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Text(
+              "Diskusi untuk: ${widget.subNoteContent}",
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(12),
