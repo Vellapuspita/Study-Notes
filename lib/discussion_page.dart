@@ -25,7 +25,7 @@ class _DiscussionPageState extends State<DiscussionPage> {
     if (text.isEmpty) return;
 
     final newMsg = ChatMessage(
-      user: "Fela", // ganti ini dengan username login kalau ada
+      user: "Fela", // bisa diganti dengan nama user login
       message: text,
       time: DateTime.now(),
     );
@@ -56,13 +56,13 @@ class _DiscussionPageState extends State<DiscussionPage> {
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final msg = _messages[index];
-                final isMe = msg.user == "Fela"; // ganti sesuai user login
+                final isMe = msg.user == "Fela";
 
                 return Align(
                   alignment:
                       isMe ? Alignment.centerRight : Alignment.centerLeft,
                   child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    margin: const EdgeInsets.symmetric(vertical: 6),
                     padding: const EdgeInsets.symmetric(
                       vertical: 10,
                       horizontal: 14,
@@ -77,6 +77,15 @@ class _DiscussionPageState extends State<DiscussionPage> {
                               ? CrossAxisAlignment.end
                               : CrossAxisAlignment.start,
                       children: [
+                        Text(
+                          msg.user,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
                         Text(msg.message, style: const TextStyle(fontSize: 16)),
                         const SizedBox(height: 4),
                         Text(
