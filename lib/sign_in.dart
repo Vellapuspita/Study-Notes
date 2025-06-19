@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPre
 import 'home_screen.dart'; // Import HomeScreen
 
 class SignInPage extends StatelessWidget {
-  static const String id = '/signin'; // Identifier route for navigation
+  static const String id = '/signin'; //identifikasi untuk rute SignInPage
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -23,6 +23,7 @@ class SignInPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
+            //sign in
             const Center(
               child: Text(
                 'SIGN IN',
@@ -34,6 +35,7 @@ class SignInPage extends StatelessWidget {
                 ),
               ),
             ),
+            //text field email & password
             const SizedBox(height: 40),
             _buildTextField(controller: emailController, label: 'Email'), // Email field
             const SizedBox(height: 40),
@@ -41,13 +43,13 @@ class SignInPage extends StatelessWidget {
               controller: passwordController,
               label: 'Password',
               obscureText: true,
-            ), // Password field
+            ), //password field
             const SizedBox(height: 40),
             Align(
               alignment: Alignment.centerRight,
               child: GestureDetector(
                 onTap: () {
-                  // Forgot password navigation
+                  //forgot password navigation
                   Navigator.pushNamed(
                     context,
                     '/forgotpassword',
@@ -65,7 +67,7 @@ class SignInPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            // Sign in button
+            //sign in button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
