@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/graphql/graphql_client.dart';
 import 'package:flutter_application_1/graphql/mutations/login_mutation.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'services/auth_services.dart'; // Import AuthServices
+import 'services/auth_services.dart'; 
 
 
 class SignInPage extends StatelessWidget {
-  static const String id = '/signin'; // Identifier route for navigation
+  static const String id = '/signin'; //identifikasi untuk rute SignInPage
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -22,6 +22,7 @@ class SignInPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
+            //sign in
             const Center(
               child: Text(
                 'SIGN IN',
@@ -33,6 +34,7 @@ class SignInPage extends StatelessWidget {
                 ),
               ),
             ),
+            //text field email & password
             const SizedBox(height: 40),
             _buildTextField(controller: emailController, label: 'Email'), // Email field
             const SizedBox(height: 40),
@@ -40,13 +42,13 @@ class SignInPage extends StatelessWidget {
               controller: passwordController,
               label: 'Password',
               obscureText: true,
-            ), // Password field
+            ), //password field
             const SizedBox(height: 40),
             Align(
               alignment: Alignment.centerRight,
               child: GestureDetector(
                 onTap: () {
-                  // Forgot password navigation
+                  //forgot password navigation
                   Navigator.pushNamed(
                     context,
                     '/forgotpassword',
@@ -64,7 +66,7 @@ class SignInPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            // Sign in button
+            //sign in button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -148,20 +150,20 @@ class SignInPage extends StatelessWidget {
     );
   }
 
-  Future<void> _handleSignIn(BuildContext context) async {
+  Future<void> _handleSignIn(BuildContext context) async { //mengirim mutasi login ke server GraphQL dan simpan token JWT
     try {
-      final client = await getGraphQLClient(); // Await the GraphQL client
+      final client = await getGraphQLClient(); //untuk mendapatkan GraphQL client
 
-      // Debugging: Log the mutation and variables
+      //mencatat perubahan dan variabel
       print('Sending GraphQL mutation: $loginMutation');
       print('Variables: ${{
         'email': emailController.text,
         'password': passwordController.text,
       }}}');
 
-      final result = await client.mutate(
+      final result = await client.mutate( //menjalankan mutasi login
         MutationOptions(
-          document: gql(loginMutation), // Use the login mutation
+          document: gql(loginMutation),
           variables: {
             'email': emailController.text,
             'password': passwordController.text,
@@ -170,20 +172,20 @@ class SignInPage extends StatelessWidget {
       );
 
       if (result.hasException) {
-        // Handle GraphQL errors
+        //mengelola GraphQL errors
         print('GraphQL Error: ${result.exception.toString()}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: ${result.exception.toString()}')),
         );
       } else {
-        // Handle successful login
+        //mengelola login yang berhasil
         final token = result.data?['login']['token'];
         if (token != null) {
-          await AuthServices.saveToken(token); // Save the token using AuthServices
+          await AuthServices.saveToken(token); //menyimpan token menggunakan AuthServices
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Login successful!')),
           );
-          Navigator.pushReplacementNamed(context, '/homescreen'); // Navigate to home screen
+          Navigator.pushReplacementNamed(context, '/homescreen'); //navigasi ke halaman utama
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Invalid login credentials')),
@@ -191,7 +193,7 @@ class SignInPage extends StatelessWidget {
         }
       }
     } catch (e) {
-      // Handle unexpected errors
+      //menangani errors yang tidak terduga
       print('Unexpected Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('An unexpected error occurred: $e')),
